@@ -77,7 +77,7 @@ export default async function Home() {
                         className={styles.icon}
                     />
                     <img 
-                        src={`/paths/${c.path.toLowerCase()}.png`} 
+                        src={`/paths/${c.path}.png`} 
                         alt={c.path}
                         className={styles.icon}
                     />
