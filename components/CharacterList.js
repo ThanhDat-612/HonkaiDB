@@ -34,7 +34,7 @@ export default function CharacterList({ characters }) {
             {["destruction","thehunt","erudition","harmony", "nihility","preservation","abundance","remembrance","elation"].map(path => (
                 <img
                   key={path}
-                  src={`/paths/${path}.png`}
+                  src={`/paths/${c.path.toLowerCase()}.png`}
                   className={`${styles.filterIcon} ${pathFilter === path ? styles.active : ""}`}
                   onClick={() => setPathFilter(path === pathFilter ? "all" : path)}
                 />
