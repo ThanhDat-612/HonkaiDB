@@ -34,7 +34,7 @@ export default function CharacterList({ characters }) {
             {["destruction","thehunt","erudition","harmony", "nihility","preservation","abundance","remembrance","elation"].map(path => (
                 <img
                   key={path}
-                  src={`/paths/${c.path.toLowerCase()}.png`}
+                  src={`/paths/${path}.png`}
                   className={`${styles.filterIcon} ${pathFilter === path ? styles.active : ""}`}
                   onClick={() => setPathFilter(path === pathFilter ? "all" : path)}
                 />
@@ -52,6 +52,16 @@ export default function CharacterList({ characters }) {
             <div className={styles.cardInfo}>
               <h3>{c.name}</h3>
               <p className={styles.rarity}>{"⭐".repeat(c.rarity)}</p>
+            </div>
+            <div className={styles.iconRow}>
+              <img 
+                src={`/elements/${c.element.toLowerCase()}.png`}
+                className={styles.icon}
+              />
+              <img 
+                src={`/paths/${c.path.toLowerCase()}.png`}
+                className={styles.icon}
+              />  
             </div>
           </div>
         ))}
