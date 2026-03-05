@@ -1,0 +1,61 @@
+<div className={styles.div3}>
+        {/* FILTER */}
+        <div className={styles.filterSection}>
+          <div className={styles.filterGroup}>
+            <span>ELEMENT</span>
+            <img src="/elements/fire.png" className={styles.filterIcon}></img>
+            <img src="/elements/ice.png" className={styles.filterIcon}></img>
+            <img src="/elements/lightning.png" className={styles.filterIcon}></img>
+            <img src="/elements/wind.png" className={styles.filterIcon}></img>
+            <img src="/elements/quantum.png" className={styles.filterIcon}></img>
+            <img src="/elements/imaginary.png" className={styles.filterIcon}></img>
+            <img src="/elements/physic.png" className={styles.filterIcon}></img>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <span>PATH</span>
+            <img src="/paths/destruction.png" className={styles.filterIcon}/>
+            <img src="/paths/thehunt.png" className={styles.filterIcon}/>
+            <img src="/paths/erudition.png" className={styles.filterIcon}/>
+            <img src="/paths/harmony.png" className={styles.filterIcon}/>
+            <img src="/paths/nihility.png" className={styles.filterIcon}/>
+            <img src="/paths/preservation.png" className={styles.filterIcon}/>
+            <img src="/paths/abundance.png" className={styles.filterIcon}/>
+            <img src="/paths/remembrance.png" className={styles.filterIcon}/>
+            <img src="/paths/elation.png" className={styles.filterIcon}/>
+          </div>
+        </div>
+        {/* CHARACTER GRID */}
+          <div className={styles.characterGrid}>
+            {characters.map((c:any) => (
+              <div key={c._id} className={styles.card}>
+                
+                <div className={styles.cardImage}>
+                  <img src={c.image} alt={c.name}/>
+                </div>
+
+                <div className={styles.cardInfo}>
+                  <h3>{c.name}</h3>
+
+                  <p className={styles.rarity}>
+                    {"⭐".repeat(c.rarity)}
+                  </p>
+
+                  <div className={styles.iconRow}>
+                    <img 
+                        src={`/elements/${c.element.toLowerCase()}.png`} 
+                        alt={c.element}
+                        className={styles.icon}
+                    />
+                    <img 
+                        src={`/paths/${c.path}.png`} 
+                        alt={c.path}
+                        className={styles.icon}
+                    />
+                  </div>
+                </div>
+
+              </div>
+            ))}
+          </div>
+      </div>
