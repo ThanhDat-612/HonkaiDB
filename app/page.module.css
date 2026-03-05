@@ -1,0 +1,210 @@
+.parent {
+  display: grid;
+  /* Cột 1 chỉ rộng 0px hoặc rất nhỏ vì Sidebar dùng position: fixed */
+  grid-template-columns: 0px 1fr; 
+  grid-template-rows: 80px 1fr; 
+  min-height: 100vh;
+  background-color: #020617; /* Thêm màu nền tối cho toàn trang để không bị trắng */
+}
+/* NAVBAR */
+.div1 {
+  grid-column: 1 / span 2; /* Chiếm toàn bộ chiều ngang */
+  grid-row: 1;
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #1e293b;
+}
+/* Logo */
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #60a5fa;
+}
+
+/* Menu giữa */
+.menu {
+  display: flex;
+  gap: 25px;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.menu a:hover {
+  color: #60a5fa;
+}
+
+/* Search + Login */
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions input {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+
+.actions button {
+  padding: 6px 12px;
+  background: #3b82f6;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.actions button:hover {
+  background: #2563eb;
+}
+.div2 {
+  position: fixed;
+  top: 80px; /* chiều cao navbar */
+  left: 0;
+
+  width: 220px;
+  height: calc(100vh - 80px);
+
+  background: #1f2937;
+  color: white;
+  padding: 20px;
+
+  transform: translateX(-180px);
+  transition: transform 0.3s ease;
+
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Khi hover vào sidebar */
+.div2:hover {
+  transform: translateX(0);
+  z-index: 9999;    
+  box-shadow: 10px 0 15px rgba(64, 201, 206, 0.5);
+}
+
+/* DIV3 MAIN AREA */
+.div3 {
+  grid-column: 2; /* Luôn nằm ở cột 2, không bị lấn vào cột 1 của Sidebar */
+  grid-row: 2;
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  margin: 20px auto; /* Tạo khoảng cách với viền trình duyệt */
+  width: 95%;
+  max-width: 1200px;
+  border-radius: 16px;
+  min-height: calc(100vh - 120px); /* Đảm bảo luôn dài xuống dưới */
+}
+
+/* FILTER SECTION */
+.filterSection {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.filterSection select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #1e293b;
+  color: white;
+  cursor: pointer;
+}
+
+/* CHARACTER GRID */
+.characterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* CHARACTER CARD */
+.card {
+  height: 180px;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 12px;
+  box-shadow: 10px 0 15px rgba(9, 162, 223, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  color: white;
+  font-weight: 500;
+  overflow:hidden;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background: #334155;
+}
+.cardImage{
+  background:#1f2937;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px;
+
+}
+.cardImage img{
+  width:120px;
+}
+.cardInfo{
+  padding:10px;
+  text-align:center;
+}
+.rarity{
+  color:gold;
+}
+.charImage {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.card:hover .cardImage img {
+  transform: scale(1.5); /* Zoom nhẹ ảnh khi hover */
+}
+.cardInfo h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  color: #f8fafc;
+}
+.iconRow {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 8px;
+  padding-top: 8px;
+  width: 100%;
+}
+.icon {
+  width: 42px;   /* Size icon vừa phải */
+  height: 42px;
+  filter: drop-shadow(0 0 4px rgba(139, 127, 127, 0.692));
+  transition: transform 0.2s;
+}
+.icon:hover {
+  transform: scale(1.2);
+}
+.div4 {
+  grid-column-start: 5;
+  grid-row: 2;
+  grid-row-start: 1;
+}

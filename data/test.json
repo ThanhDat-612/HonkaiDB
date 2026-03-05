@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Kafka",
+    "element": "Lightning",
+    "path": "Nihility",
+    "rarity": 5,
+    "image": "/characters/kafka.png",
+    "description": "A member of the Stellaron Hunters who is calm, collected and mysterious."
+  },
+  {
+    "name": "Blade",
+    "element": "Wind",
+    "path": "Destruction",
+    "rarity": 5,
+    "image": "/characters/blade.png",
+    "description": "A swordsman who abandoned his body to become immortal."
+  },
+  {
+    "name": "Silver Wolf",
+    "element": "Quantum",
+    "path": "Nihility",
+    "rarity": 5,
+    "image": "/characters/silverwolf.png",
+    "description": "A genius hacker capable of manipulating reality like a game."
+  }
+]
