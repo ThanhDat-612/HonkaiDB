@@ -175,7 +175,7 @@
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-5px) scale(1.5);
   background: #334155;
 }
 .cardImage{
@@ -206,9 +206,11 @@
   object-fit: cover;
   border-radius: 8px;
 }
+/* 
 .card:hover .cardImage img {
-  transform: scale(1.5); /* Zoom nhẹ ảnh khi hover */
-}
+  transform: scale(1.2);
+} */
+
 .cardInfo h3 {
   margin: 0 0 5px 0;
   font-size: 1.1rem;
@@ -241,4 +243,9 @@
   grid-column-start: 5;
   grid-row: 2;
   grid-row-start: 1;
+}
+
+.sidebarImage{
+  width: 150px;
+  height: 150px;
 }

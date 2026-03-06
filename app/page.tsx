@@ -30,7 +30,11 @@ export default async function Home() {
         </div>
       </div>
 
-      <div className={styles.div2}>Sidebar</div>
+      <div className={styles.div2}>
+        <h3>Sidebar</h3>  
+        <img src="/1.gif" alt="sidebar_logo" className={styles.sidebarImage} />
+        <h3>Coming soon!</h3>
+      </div>
       <CharacterList characters={characters} />
       
     </div>

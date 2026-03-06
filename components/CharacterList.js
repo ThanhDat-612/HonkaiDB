@@ -44,7 +44,7 @@ export default function CharacterList({ characters }) {
 
       {/* HIỂN THỊ DANH SÁCH */}
       <div className={styles.characterGrid}>
-        {filteredCharacters.map((c) => (
+        {/* {filteredCharacters.map((c) => (
           <div key={c._id} className={styles.card}>
             <div className={styles.cardImage}>
               <img src={c.image} alt={c.name} />
@@ -64,7 +64,28 @@ export default function CharacterList({ characters }) {
               />  
             </div>
           </div>
-        ))}
+        ))} */}
+        {filteredCharacters.map((c) => (
+        <div key={c._id} className={styles.card}>
+          {/* Ảnh bên trái */}
+          <div className={styles.cardImage}>
+            <img src={c.image} alt={c.name} />
+          </div>
+
+          {/* Khối chứa TẤT CẢ thông tin bên phải */}
+          <div className={styles.rightContent}>
+            <div className={styles.cardInfo}>
+              <h3>{c.name}</h3>
+              <p className={styles.rarity}>{"⭐".repeat(c.rarity)}</p>
+            </div>
+            
+            <div className={styles.iconRow}>
+              <img src={`/elements/${c.element.toLowerCase()}.png`} className={styles.icon} />
+              <img src={`/paths/${c.path.toLowerCase()}.png`} className={styles.icon} />  
+            </div>
+          </div>
+        </div>
+      ))}
       </div>
     </div>
   );
