@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
 import styles from "../app/page.module.css";
+import CharacterCard from "@/components/CharacterCard";
+import CharacterDetailModal from "@/components/CharacterDetailModal";
 
 export default function CharacterList({ characters }) {
   const [elementFilter, setElementFilter] = useState("all");
   const [pathFilter, setPathFilter] = useState("all");
-
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
   const filteredCharacters = characters.filter((c) => {
     const elementMatch = elementFilter === "all" || c.element.toLowerCase() === elementFilter;
     const pathMatch = pathFilter === "all" || c.path.toLowerCase() === pathFilter;
@@ -44,29 +46,8 @@ export default function CharacterList({ characters }) {
 
       {/* HIỂN THỊ DANH SÁCH */}
       <div className={styles.characterGrid}>
-        {/* {filteredCharacters.map((c) => (
-          <div key={c._id} className={styles.card}>
-            <div className={styles.cardImage}>
-              <img src={c.image} alt={c.name} />
-            </div>
-            <div className={styles.cardInfo}>
-              <h3>{c.name}</h3>
-              <p className={styles.rarity}>{"⭐".repeat(c.rarity)}</p>
-            </div>
-            <div className={styles.iconRow}>
-              <img 
-                src={`/elements/${c.element.toLowerCase()}.png`}
-                className={styles.icon}
-              />
-              <img 
-                src={`/paths/${c.path.toLowerCase()}.png`}
-                className={styles.icon}
-              />  
-            </div>
-          </div>
-        ))} */}
         {filteredCharacters.map((c) => (
-        <div key={c._id} className={styles.card}>
+        <div key={c._id} className={styles.card} onClick={() => setSelectedCharacter(c)}>
           {/* Ảnh bên trái */}
           <div className={styles.cardImage}>
             <img src={c.image} alt={c.name} />
