@@ -31,7 +31,7 @@ export default function CharacterList({ characters }) {
         {/* Tương tự cho Path... */}
         <div className={styles.filterGroup}>
           <span>PATH</span>
-            {["destruction","thehunt","erudition","harmony", "nihility","preservation","abundance","remembrance","elation"].map(path => (
+            {["destruction","hunt","erudition","harmony", "nihility","preservation","abundance","remembrance","elation"].map(path => (
                 <img
                   key={path}
                   src={`/paths/${path}.png`}
