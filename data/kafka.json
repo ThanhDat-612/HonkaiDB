@@ -1,0 +1,145 @@
+{
+  "_id": "kafka",
+
+  "name": {
+    "en": "Kafka",
+    "vi": "Kafka"
+  },
+
+  "rarity": 5,
+  "element": "Lightning",
+  "path": "Nihility",
+
+  "images": {
+    "avatar": "/images/characters/kafka/avatar.png",
+    "splash": "/images/characters/kafka/splash.png"
+  },
+
+  "description": {
+    "en": "A member of the Stellaron Hunters who is calm and elegant.",
+    "vi": "Một thành viên của Stellaron Hunters với phong thái bình tĩnh và quyến rũ."
+  },
+
+  "stats": {
+    "hp": 1086,
+    "atk": 679,
+    "def": 485,
+    "speed": 100,
+    "energy": 120
+  },
+
+  "kits": [
+
+    {
+      "type": "original",
+      "version": "1.2",
+
+      "skills": {
+
+        "basicAttack": {
+          "name": {
+            "en": "Midnight Tumult",
+            "vi": "Hỗn Loạn Nửa Đêm"
+          },
+          "description": {
+            "en": "Deals Lightning DMG equal to 50% of ATK to a single enemy.",
+            "vi": "Gây sát thương Lôi bằng 50% tấn công của Kafka lên một kẻ địch."
+          }
+        },
+
+        "skill": {
+          "name": {
+            "en": "Caressing Moonlight",
+            "vi": "Ánh Trăng Vuốt Ve"
+          },
+          "description": {
+            "en": "Deals Lightning DMG to a target and adjacent enemies.",
+            "vi": "Gây sát thương Lôi lên mục tiêu và kẻ địch lân cận."
+          }
+        },
+
+        "ultimate": {
+          "name": {
+            "en": "Twilight Trill",
+            "vi": "Khúc Nhạc Hoàng Hôn"
+          },
+          "energyCost": 120,
+          "description": {
+            "en": "Deals Lightning DMG to all enemies.",
+            "vi": "Gây sát thương Lôi lên toàn bộ kẻ địch."
+          }
+        }
+
+      }
+    },
+
+    {
+      "type": "buffed",
+      "version": "2.5",
+
+      "skills": {
+
+        "basicAttack": {
+          "name": {
+            "en": "Midnight Tumult",
+            "vi": "Hỗn Loạn Nửa Đêm"
+          },
+          "description": {
+            "en": "Deals Lightning DMG equal to 70% of ATK.",
+            "vi": "Gây sát thương Lôi bằng 70% tấn công của Kafka."
+          }
+        },
+
+        "skill": {
+          "name": {
+            "en": "Caressing Moonlight+",
+            "vi": "Ánh Trăng Vuốt Ve+"
+          },
+          "description": {
+            "en": "Triggers all DoT effects twice.",
+            "vi": "Kích hoạt toàn bộ hiệu ứng DoT hai lần."
+          }
+        },
+
+        "ultimate": {
+          "name": {
+            "en": "Twilight Trill+",
+            "vi": "Khúc Nhạc Hoàng Hôn+"
+          },
+          "energyCost": 120,
+          "description": {
+            "en": "Deals higher Lightning DMG and extends Shock.",
+            "vi": "Gây sát thương Lôi cao hơn và kéo dài Shock."
+          }
+        }
+
+      }
+    }
+
+  ],
+
+  "eidolons": [
+    {
+      "rank": 1,
+      "name": {
+        "en": "Da Capo",
+        "vi": "Da Capo"
+      },
+      "description": {
+        "en": "Increases Shock damage.",
+        "vi": "Tăng sát thương Shock."
+      }
+    },
+    {
+      "rank": 2,
+      "name": {
+        "en": "Fortississimo",
+        "vi": "Fortississimo"
+      },
+      "description": {
+        "en": "Enemies take more DoT damage.",
+        "vi": "Kẻ địch nhận thêm sát thương DoT."
+      }
+    }
+  ]
+}
