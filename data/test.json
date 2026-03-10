@@ -1,26 +1,114 @@
-[
-  {
-    "name": "Kafka",
-    "element": "Lightning",
-    "path": "Nihility",
-    "rarity": 5,
-    "image": "/characters/kafka.png",
-    "description": "A member of the Stellaron Hunters who is calm, collected and mysterious."
+{
+  "name": "Kafka",
+  "rarity": 5,
+
+  "description": {
+    "en": "A member of the Stellaron Hunters.",
+    "vi": "Một thành viên của Stellaron Hunters."
   },
-  {
-    "name": "Blade",
-    "element": "Wind",
-    "path": "Destruction",
-    "rarity": 5,
-    "image": "/characters/blade.png",
-    "description": "A swordsman who abandoned his body to become immortal."
+
+  "kits": [
+    {
+      "type": "original",
+      "skills": {
+
+        "basic": {
+          "variants": {
+            "normal": {
+              "name": {
+                "en": "Midnight Tumult",
+                "vi": "Bạo Loạn Đêm"
+              },
+              "description": {
+                "en": "Deals Lightning DMG",
+                "vi": "Gây sát thương Lôi"
+              }
+            },
+
+            "enhanced_1": {
+              "name": {
+                "en": "Enhanced Attack I",
+                "vi": "Đòn đánh cường hóa I"
+              },
+              "description": {
+                "en": "Stronger Lightning DMG",
+                "vi": "Sát thương Lôi mạnh hơn"
+              }
+            }
+          }
+        },
+
+        "skill": {
+          "variants": {
+            "default": {
+              "name": {
+                "en": "Caressing Moonlight",
+                "vi": "Ánh Trăng Vuốt Ve"
+              },
+              "description": {
+                "en": "Deals DMG and triggers DoT",
+                "vi": "Gây sát thương và kích hoạt DoT"
+              }
+            }
+          }
+        },
+
+        "ultimate": {
+          "variants": {
+            "default": {
+              "name": {
+                "en": "Twilight Trill",
+                "vi": "Khúc Ca Hoàng Hôn"
+              },
+              "description": {
+                "en": "AoE Lightning DMG",
+                "vi": "Sát thương Lôi diện rộng"
+              }
+            }
+          }
+        },
+
+        "talent": {
+          "variants": {
+            "default": {
+              "name": {
+                "en": "Gentle but Cruel",
+                "vi": "Dịu Dàng Nhưng Tàn Nhẫn"
+              },
+              "description": {
+                "en": "Follow up attack",
+                "vi": "Đòn đánh truy kích"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+
+  "traces": {
+    "trace_1": {
+      "name": {
+        "en": "Torture",
+        "vi": "Tra Tấn"
+      },
+      "description": {
+        "en": "Extra DoT",
+        "vi": "Tăng DoT"
+      }
+    }
   },
-  {
-    "name": "Silver Wolf",
-    "element": "Quantum",
-    "path": "Nihility",
-    "rarity": 5,
-    "image": "/characters/silverwolf.png",
-    "description": "A genius hacker capable of manipulating reality like a game."
+
+  "eidolons": {
+    "e1": {
+      "name": {
+        "en": "Da Capo",
+        "vi": "Da Capo"
+      },
+      "description": {
+        "en": "Boost DoT",
+        "vi": "Tăng DoT"
+      }
+    }
   }
-]
+}
