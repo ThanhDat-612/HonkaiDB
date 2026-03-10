@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../app/page.module.css";
 import SmartImage from "@/components/SmartImage";
 
@@ -9,6 +9,15 @@ export default function CharacterDetailModal({ character, onClose }) {
   const [lang, setLang] = useState("vi");
   const [openSection, setOpenSection] = useState(null);
   const [enlargedImage, setEnlargedImage] = useState(null);
+  const [hasBuffedVersion, setHasBuffedVersion] = useState(false);
+
+  // Kiểm tra xem nhân vật có phiên bản buffed không
+  useEffect(() => {
+    if (character?.kits) {
+      const buffedKit = character.kits.find(k => k.type === "buffed");
+      setHasBuffedVersion(!!buffedKit);
+    }
+  }, [character]);
 
   if (!character) return null;
 
@@ -20,6 +29,18 @@ export default function CharacterDetailModal({ character, onClose }) {
   const skills = kit?.skills || {};
   const charId = character.id;
   const stats = character.stats || {};
+
+  // Hàm xử lý xuống dòng cho text
+  const formatDescription = (text) => {
+    if (!text) return "No description.";
+    if (Array.isArray(text)) {
+      return text.map((line, i) => <p key={i}>{line}</p>);
+    }
+    // Chia text theo \n và tạo mảng các đoạn
+    return text.split('\n').map((line, i) => (
+      <p key={i} style={{ margin: '0 0 8px 0' }}>{line}</p>
+    ));
+  };
 
   const closeEnlargedImage = () => {
     setEnlargedImage(null);
@@ -43,12 +64,7 @@ export default function CharacterDetailModal({ character, onClose }) {
 
           <div className={styles.skillInfo}>
             <h4>{variant.name?.[lang] || variantKey}</h4>
-
-            {Array.isArray(variant.description?.[lang]) ? (
-              variant.description[lang].map((line, i) => <p key={i}>{line}</p>)
-            ) : (
-              <p>{variant.description?.[lang] || "No description."}</p>
-            )}
+            {formatDescription(variant.description?.[lang])}
           </div>
 
         </div>
@@ -104,7 +120,7 @@ export default function CharacterDetailModal({ character, onClose }) {
 
           <div className={styles.skillInfo}>
             <h4>{data.name?.[lang] || `${labelPrefix} ${key}`}</h4>
-            <p>{data.description?.[lang] || "No description."}</p>
+            {formatDescription(data.description?.[lang])}
           </div>
         </div>
       );
@@ -125,6 +141,18 @@ export default function CharacterDetailModal({ character, onClose }) {
   };
 
   const shadowColor = getElementShadowColor(character.element);
+
+  // Hiển thị thông báo nếu bật buffed nhưng không có
+  const renderBuffedWarning = () => {
+    if (buffed && !hasBuffedVersion) {
+      return (
+        <div className={styles.buffedWarning}>
+          <p>⚠️ This character doesn't have a buffed version yet.</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className={styles.modal} onClick={onClose}>
@@ -148,18 +176,20 @@ export default function CharacterDetailModal({ character, onClose }) {
               {lang.toUpperCase()}
             </button>
 
-            <div className={styles.buffToggle}>
-              <label htmlFor="buff-toggle">Buffed</label>
-              <label className={styles.switch}>
-                <input
-                  id="buff-toggle"
-                  type="checkbox"
-                  checked={buffed}
-                  onChange={() => setBuffed(!buffed)}
-                />
-                <span className={styles.slider}></span>
-              </label>
-            </div>
+            {hasBuffedVersion && (
+              <div className={styles.buffToggle}>
+                <label htmlFor="buff-toggle">Buffed</label>
+                <label className={styles.switch}>
+                  <input
+                    id="buff-toggle"
+                    type="checkbox"
+                    checked={buffed}
+                    onChange={() => setBuffed(!buffed)}
+                  />
+                  <span className={styles.slider}></span>
+                </label>
+              </div>
+            )}
 
             <button className={styles.closeBtn} onClick={onClose}>✕</button>
           </div>
@@ -187,24 +217,24 @@ export default function CharacterDetailModal({ character, onClose }) {
               <div className={styles.statsGrid}>
                 <div className={styles.statItem}>
                   <span className={styles.statLabel}>HP</span>
-                  <span className={styles.statValue}>{stats.hp || 1241}</span>
+                  <span className={styles.statValue}>{stats.hp || "N/A"}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.statLabel}>ATK</span>
-                  <span className={styles.statValue}>{stats.atk || 698}</span>
+                  <span className={styles.statValue}>{stats.atk || "N/A"}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.statLabel}>DEF</span>
-                  <span className={styles.statValue}>{stats.def || 363}</span>
+                  <span className={styles.statValue}>{stats.def || "N/A"}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.statLabel}>SPD</span>
-                  <span className={styles.statValue}>{stats.speed || 102}</span>
+                  <span className={styles.statValue}>{stats.speed || "N/A"}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.statLabel}>Energy</span>
                   <span className={`${styles.statValue} ${styles.energy}`}>
-                    {stats.energy || 140}
+                    {stats.energy || "N/A"}
                   </span>
                 </div>
               </div>
@@ -241,86 +271,90 @@ export default function CharacterDetailModal({ character, onClose }) {
           {/* RIGHT COLUMN */}
           <div className={styles.rightColumn}>
             
-            {/* DESCRIPTION - ĐÃ ĐƯỢC CẢI THIỆN */}
+            {/* DESCRIPTION */}
             <div className={styles.descriptionCard}>
               <div className={styles.descriptionHeader}>
                 <h3>Character Story</h3>
               </div>
               
               <div className={styles.descriptionContent}>
-                <p className={styles.descriptionText}>
-                  {character.info?.[lang] || ""}
-                </p>
-                
-                {/* Optional: Thêm quote nếu muốn */}
-                <div className={styles.descriptionQuote}>
+                <div className={styles.descriptionText}>
+                  {formatDescription(character.info?.[lang])}
                 </div>
               </div>
               
-              {/* Optional: Thêm thông tin thêm về nhân vật */}
               <div className={styles.descriptionFooter}>
                 <div className={styles.descriptionTag}>
-                  <span>📅 Version  - {characterVersion}</span>
+                  <span>📅 Version - {characterVersion}</span>
                 </div>
               </div>
             </div>
+
+            {/* Buffed Warning */}
+            {renderBuffedWarning()}
 
             {/* SKILLS */}
-            <div className={styles.section}>
-              <div
-                className={styles.sectionHeader}
-                onClick={() =>
-                  setOpenSection(openSection === "skills" ? null : "skills")
-                }
-              >
-                Skills
-                <span className={styles.arrow}>{openSection === "skills" ? "▼" : "▶"}</span>
-              </div>
-
-              {openSection === "skills" && (
-                <div className={styles.sectionContent}>
-                  {renderSkillCategory()}
+            {skills && Object.keys(skills).length > 0 && (
+              <div className={styles.section}>
+                <div
+                  className={styles.sectionHeader}
+                  onClick={() =>
+                    setOpenSection(openSection === "skills" ? null : "skills")
+                  }
+                >
+                  Skills
+                  <span className={styles.arrow}>{openSection === "skills" ? "▼" : "▶"}</span>
                 </div>
-              )}
-            </div>
+
+                {openSection === "skills" && (
+                  <div className={styles.sectionContent}>
+                    {renderSkillCategory()}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* TRACES */}
-            <div className={styles.section}>
-              <div
-                className={styles.sectionHeader}
-                onClick={() =>
-                  setOpenSection(openSection === "traces" ? null : "traces")
-                }
-              >
-                Traces
-                <span className={styles.arrow}>{openSection === "traces" ? "▼" : "▶"}</span>
-              </div>
-
-              {openSection === "traces" && (
-                <div className={styles.sectionContent}>
-                  {renderListSection("traces", character.traces, "Trace")}
+            {character.traces && Object.keys(character.traces).length > 0 && (
+              <div className={styles.section}>
+                <div
+                  className={styles.sectionHeader}
+                  onClick={() =>
+                    setOpenSection(openSection === "traces" ? null : "traces")
+                  }
+                >
+                  Traces
+                  <span className={styles.arrow}>{openSection === "traces" ? "▼" : "▶"}</span>
                 </div>
-              )}
-            </div>
+
+                {openSection === "traces" && (
+                  <div className={styles.sectionContent}>
+                    {renderListSection("traces", character.traces, "Trace")}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* EIDOLONS */}
-            <div className={styles.section}>
-              <div
-                className={styles.sectionHeader}
-                onClick={() =>
-                  setOpenSection(openSection === "eidolons" ? null : "eidolons")
-                }
-              >
-                Eidolons
-                <span className={styles.arrow}>{openSection === "eidolons" ? "▼" : "▶"}</span>
-              </div>
-
-              {openSection === "eidolons" && (
-                <div className={styles.sectionContent}>
-                  {renderListSection("eidolons", character.eidolons, "Eidolon")}
+            {character.eidolons && Object.keys(character.eidolons).length > 0 && (
+              <div className={styles.section}>
+                <div
+                  className={styles.sectionHeader}
+                  onClick={() =>
+                    setOpenSection(openSection === "eidolons" ? null : "eidolons")
+                  }
+                >
+                  Eidolons
+                  <span className={styles.arrow}>{openSection === "eidolons" ? "▼" : "▶"}</span>
                 </div>
-              )}
-            </div>
+
+                {openSection === "eidolons" && (
+                  <div className={styles.sectionContent}>
+                    {renderListSection("eidolons", character.eidolons, "Eidolon")}
+                  </div>
+                )}
+              </div>
+            )}
 
           </div>
         </div>
@@ -333,7 +367,9 @@ export default function CharacterDetailModal({ character, onClose }) {
               <img src={enlargedImage.src} alt={enlargedImage.name} />
               <div className={styles.enlargedImageInfo}>
                 <h3>{enlargedImage.name}</h3>
-                <p>{enlargedImage.description}</p>
+                <div className={styles.enlargedImageDescription}>
+                  {formatDescription(enlargedImage.description)}
+                </div>
               </div>
             </div>
           </div>
