@@ -135,7 +135,7 @@ export default function CharacterDetailModal({ character, onClose }) {
       ice: '#3b82f6',
       quantum: '#a855f7',
       imaginary: '#fbbf24',
-      physical: '#6b7280'
+      physical: '#f7faff'
     };
     return elementColors[element?.toLowerCase()] || '#3b82f6';
   };
@@ -153,6 +153,15 @@ export default function CharacterDetailModal({ character, onClose }) {
     }
     return null;
   };
+
+  // Hàm lấy giá trị năng lượng (có thể là energy hoặc special)
+  const getEnergyValue = () => {
+    if (stats.energy) return { value: stats.energy, label: "Energy" };
+    if (stats.special) return { value: stats.special, label: "Special" };
+    return { value: "N/A", label: "Energy" };
+  };
+
+  const energyData = getEnergyValue();
 
   return (
     <div className={styles.modal} onClick={onClose}>
@@ -232,9 +241,9 @@ export default function CharacterDetailModal({ character, onClose }) {
                   <span className={styles.statValue}>{stats.speed || "N/A"}</span>
                 </div>
                 <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Energy</span>
+                  <span className={styles.statLabel}>{energyData.label}</span>
                   <span className={`${styles.statValue} ${styles.energy}`}>
-                    {stats.energy || "N/A"}
+                    {energyData.value}
                   </span>
                 </div>
               </div>

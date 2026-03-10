@@ -426,15 +426,15 @@
 }
 
 .elementBadge[data-element="physical"] {
-  background: linear-gradient(135deg, rgba(107, 114, 128, 0.15) 0%, rgba(75, 85, 99, 0.25) 100%);
+  background: linear-gradient(135deg, rgba(162, 164, 170, 0.63) 0%, rgba(116, 120, 128, 0.952) 100%);
   color: #e5e7eb;
-  border-color: #6b7280;
+  border-color: #fdfdff;
   box-shadow: 0 0 10px rgba(107, 114, 128, 0.2);
 }
 
 .elementBadge[data-element="physical"]:hover {
-  background: linear-gradient(135deg, rgba(107, 114, 128, 0.25) 0%, rgba(75, 85, 99, 0.35) 100%);
-  box-shadow: 0 0 15px rgba(107, 114, 128, 0.4);
+  background: linear-gradient(135deg, rgba(107, 114, 128, 0.25) 0%, rgba(202, 206, 214, 0.89) 100%);
+  box-shadow: 0 0 15px rgba(223, 228, 238, 0.87);
 }
 
 /* PATH BADGE */
