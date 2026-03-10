@@ -129,15 +129,15 @@ export default function CharacterDetailModal({ character, onClose }) {
 
   const getElementShadowColor = (element) => {
     const elementColors = {
-      wind: '#10b981',
-      lightning: '#8b5cf6',
-      fire: '#ef4444',
-      ice: '#3b82f6',
-      quantum: '#a855f7',
-      imaginary: '#fbbf24',
-      physical: '#f7faff'
+      wind: 'rgba(16, 185, 129, 1)',      // Xanh lá - gió
+      lightning: 'rgba(213, 110, 255, 1)', // Tím sáng - sấm sét (đã đồng bộ với badge)
+      fire: 'rgba(239, 68, 68, 1)',        // Đỏ - lửa
+      ice: 'rgba(59, 130, 246, 1)',        // Xanh dương - băng
+      quantum: 'rgba(145, 145, 255, 1)',   // Tím xanh - lượng tử (đã đồng bộ với badge)
+      imaginary: 'rgba(251, 191, 36, 1)',  // Vàng - ảo
+      physical: 'rgba(255, 255, 255, 1)'   // Trắng - vật lý
     };
-    return elementColors[element?.toLowerCase()] || '#3b82f6';
+    return elementColors[element?.toLowerCase()] || 'rgba(96, 165, 250, 1)';
   };
 
   const shadowColor = getElementShadowColor(character.element);
@@ -211,7 +211,13 @@ export default function CharacterDetailModal({ character, onClose }) {
           <div className={styles.leftColumn}>
             <div 
               className={styles.imageContainer}
-              style={{ borderColor: shadowColor }}
+              // style={{ 
+              //   boxShadow: `0 25px 50px -12px ${shadowColor}, 0 0 30px ${shadowColor.replace('1)', '0.6)')}, inset 0 1px 2px rgba(255,255,255,0.1)`
+              // }}
+              style={{ 
+                boxShadow: `0 0 0 3px ${shadowColor}, 0 0 30px ${shadowColor}, 0 20px 40px rgba(0,0,0,0.5)`,
+                border: 'none' // Bỏ border gốc vì đã có shadow làm viền
+              }}
             >
               <img
                 src={character.image}
