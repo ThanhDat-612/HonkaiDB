@@ -246,11 +246,19 @@ export default function CharacterDetailModal({ character, onClose }) {
                   <span className={styles.statLabel}>SPD</span>
                   <span className={styles.statValue}>{stats.speed || "N/A"}</span>
                 </div>
-                <div className={styles.statItem}>
+                {/* <div className={styles.statItem}>
                   <span className={styles.statLabel}>{energyData.label}</span>
                   <span className={`${styles.statValue} ${styles.energy}`}>
                     {energyData.value}
                   </span>
+                </div> */}
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>Energy</span>
+                  <span className={styles.statValue}>{stats.energy || "N/A"}</span>
+                </div>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>Special</span>
+                  <span className={styles.statValue}>{stats.special || "N/A"}</span>
                 </div>
               </div>
               
