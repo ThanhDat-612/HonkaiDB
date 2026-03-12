@@ -21,12 +21,18 @@
 
 //   if (!character) return null;
 
-//   const kit = character.kits?.find(k =>
+//   // Lấy kit hiện tại dựa vào trạng thái buffed
+//   const currentKit = character.kits?.find(k =>
 //     buffed ? k.type === "buffed" : k.type === "original"
-//   );
-//   const characterVersion = kit?.version || "Unknown";
+//   ) || character.kits?.[0];
 
-//   const skills = kit?.skills || {};
+//   const characterVersion = currentKit?.version || "Unknown";
+  
+//   // Lấy skills, traces, eidolons từ currentKit
+//   const skills = currentKit?.skills || {};
+//   const traces = currentKit?.traces || {};
+//   const eidolons = currentKit?.eidolons || {};
+  
 //   const charId = character.id;
 //   const stats = character.stats || {};
 
@@ -36,7 +42,6 @@
 //     if (Array.isArray(text)) {
 //       return text.map((line, i) => <p key={i}>{line}</p>);
 //     }
-//     // Chia text theo \n và tạo mảng các đoạn
 //     return text.split('\n').map((line, i) => (
 //       <p key={i} style={{ margin: '0 0 8px 0' }}>{line}</p>
 //     ));
@@ -85,16 +90,20 @@
 //     });
 //   };
 
+//   // SỬA HÀM NÀY - Logic đúng: khi buffed = true thì dùng ảnh _fixed
 //   const renderListSection = (folder, list, labelPrefix) => {
-//     if (!list) return null;
+//     if (!list || Object.keys(list).length === 0) return null;
 
 //     return Object.entries(list).map(([key, data]) => {
-//       const fileName =
-//         folder === "eidolons"
-//           ? `${key}`
-//           : folder === "traces"
-//           ? `${key}`
-//           : key;
+//       // Xác định tên file ảnh dựa vào trạng thái buffed
+//       let fileName = key;
+      
+//       // Nếu đang ở chế độ buffed, dùng file có tên key_fixed
+//       if (buffed) {
+//         fileName = `${key}_fix`;
+//       }
+//       // console.log('Buffed state:', buffed, 'Key:', key, 'Filename:', fileName);
+//       // Nếu không ở chế độ buffed, vẫn dùng file gốc là key
       
 //       return (
 //         <div key={key} className={styles.skillRow}>
@@ -112,6 +121,8 @@
 //               name={fileName}
 //               alt={data.name?.[lang]}
 //               className={styles.skillIcon}
+//               // Thêm fallback để nếu không tìm thấy file _fixed thì dùng file gốc
+//               fallbackName={!buffed ? undefined : key}
 //             />
 //             {folder === "eidolons" && (
 //               <div className={styles.imageZoomHint}>🔍</div>
@@ -129,13 +140,13 @@
 
 //   const getElementShadowColor = (element) => {
 //     const elementColors = {
-//       wind: 'rgba(16, 185, 129, 1)',      // Xanh lá - gió
-//       lightning: 'rgba(213, 110, 255, 1)', // Tím sáng - sấm sét (đã đồng bộ với badge)
-//       fire: 'rgba(239, 68, 68, 1)',        // Đỏ - lửa
-//       ice: 'rgba(59, 130, 246, 1)',        // Xanh dương - băng
-//       quantum: 'rgba(145, 145, 255, 1)',   // Tím xanh - lượng tử (đã đồng bộ với badge)
-//       imaginary: 'rgba(251, 191, 36, 1)',  // Vàng - ảo
-//       physical: 'rgba(255, 255, 255, 1)'   // Trắng - vật lý
+//       wind: 'rgba(16, 185, 129, 1)',
+//       lightning: 'rgba(213, 110, 255, 1)',
+//       fire: 'rgba(239, 68, 68, 1)',
+//       ice: 'rgba(59, 130, 246, 1)',
+//       quantum: 'rgba(145, 145, 255, 1)',
+//       imaginary: 'rgba(251, 191, 36, 1)',
+//       physical: 'rgba(255, 255, 255, 1)'
 //     };
 //     return elementColors[element?.toLowerCase()] || 'rgba(96, 165, 250, 1)';
 //   };
@@ -154,14 +165,9 @@
 //     return null;
 //   };
 
-//   // Hàm lấy giá trị năng lượng (có thể là energy hoặc special)
-//   const getEnergyValue = () => {
-//     if (stats.energy) return { value: stats.energy, label: "Energy" };
-//     if (stats.special) return { value: stats.special, label: "Special" };
-//     return { value: "N/A", label: "Energy" };
-//   };
-
-//   const energyData = getEnergyValue();
+//   // Kiểm tra xem có traces/eidolons trong kit hiện tại không
+//   const hasTraces = traces && Object.keys(traces).length > 0;
+//   const hasEidolons = eidolons && Object.keys(eidolons).length > 0;
 
 //   return (
 //     <div className={styles.modal} onClick={onClose}>
@@ -211,12 +217,9 @@
 //           <div className={styles.leftColumn}>
 //             <div 
 //               className={styles.imageContainer}
-//               // style={{ 
-//               //   boxShadow: `0 25px 50px -12px ${shadowColor}, 0 0 30px ${shadowColor.replace('1)', '0.6)')}, inset 0 1px 2px rgba(255,255,255,0.1)`
-//               // }}
 //               style={{ 
 //                 boxShadow: `0 0 0 3px ${shadowColor}, 0 0 30px ${shadowColor}, 0 20px 40px rgba(0,0,0,0.5)`,
-//                 border: 'none' // Bỏ border gốc vì đã có shadow làm viền
+//                 border: 'none'
 //               }}
 //             >
 //               <img
@@ -246,12 +249,6 @@
 //                   <span className={styles.statLabel}>SPD</span>
 //                   <span className={styles.statValue}>{stats.speed || "N/A"}</span>
 //                 </div>
-//                 {/* <div className={styles.statItem}>
-//                   <span className={styles.statLabel}>{energyData.label}</span>
-//                   <span className={`${styles.statValue} ${styles.energy}`}>
-//                     {energyData.value}
-//                   </span>
-//                 </div> */}
 //                 <div className={styles.statItem}>
 //                   <span className={styles.statLabel}>Energy</span>
 //                   <span className={styles.statValue}>{stats.energy || "N/A"}</span>
@@ -338,7 +335,7 @@
 //             )}
 
 //             {/* TRACES */}
-//             {character.traces && Object.keys(character.traces).length > 0 && (
+//             {hasTraces && (
 //               <div className={styles.section}>
 //                 <div
 //                   className={styles.sectionHeader}
@@ -352,14 +349,14 @@
 
 //                 {openSection === "traces" && (
 //                   <div className={styles.sectionContent}>
-//                     {renderListSection("traces", character.traces, "Trace")}
+//                     {renderListSection("traces", traces, "Trace")}
 //                   </div>
 //                 )}
 //               </div>
 //             )}
 
 //             {/* EIDOLONS */}
-//             {character.eidolons && Object.keys(character.eidolons).length > 0 && (
+//             {hasEidolons && (
 //               <div className={styles.section}>
 //                 <div
 //                   className={styles.sectionHeader}
@@ -373,7 +370,7 @@
 
 //                 {openSection === "eidolons" && (
 //                   <div className={styles.sectionContent}>
-//                     {renderListSection("eidolons", character.eidolons, "Eidolon")}
+//                     {renderListSection("eidolons", eidolons, "Eidolon")}
 //                   </div>
 //                 )}
 //               </div>
@@ -428,7 +425,7 @@ export default function CharacterDetailModal({ character, onClose }) {
   // Lấy kit hiện tại dựa vào trạng thái buffed
   const currentKit = character.kits?.find(k =>
     buffed ? k.type === "buffed" : k.type === "original"
-  ) || character.kits?.[0]; // Fallback to first kit if not found
+  ) || character.kits?.[0];
 
   const characterVersion = currentKit?.version || "Unknown";
   
@@ -446,7 +443,6 @@ export default function CharacterDetailModal({ character, onClose }) {
     if (Array.isArray(text)) {
       return text.map((line, i) => <p key={i}>{line}</p>);
     }
-    // Chia text theo \n và tạo mảng các đoạn
     return text.split('\n').map((line, i) => (
       <p key={i} style={{ margin: '0 0 8px 0' }}>{line}</p>
     ));
@@ -495,16 +491,20 @@ export default function CharacterDetailModal({ character, onClose }) {
     });
   };
 
+  // SỬA HÀM NÀY - Logic đúng: khi buffed = true thì dùng ảnh _fixed
   const renderListSection = (folder, list, labelPrefix) => {
     if (!list || Object.keys(list).length === 0) return null;
 
     return Object.entries(list).map(([key, data]) => {
-      const fileName =
-        folder === "eidolons"
-          ? `${key}`
-          : folder === "traces"
-          ? `${key}`
-          : key;
+      // Xác định tên file ảnh dựa vào trạng thái buffed
+      let fileName = key;
+      
+      // Nếu đang ở chế độ buffed, dùng file có tên key_fixed
+      if (buffed) {
+        fileName = `${key}_fix`;
+      }
+      // console.log('Buffed state:', buffed, 'Key:', key, 'Filename:', fileName);
+      // Nếu không ở chế độ buffed, vẫn dùng file gốc là key
       
       return (
         <div key={key} className={styles.skillRow}>
@@ -522,6 +522,8 @@ export default function CharacterDetailModal({ character, onClose }) {
               name={fileName}
               alt={data.name?.[lang]}
               className={styles.skillIcon}
+              // Thêm fallback để nếu không tìm thấy file _fixed thì dùng file gốc
+              fallbackName={!buffed ? undefined : key}
             />
             {folder === "eidolons" && (
               <div className={styles.imageZoomHint}>🔍</div>
@@ -648,11 +650,11 @@ export default function CharacterDetailModal({ character, onClose }) {
                   <span className={styles.statLabel}>SPD</span>
                   <span className={styles.statValue}>{stats.speed || "N/A"}</span>
                 </div>
-                <div className={styles.statItem}>
+                <div className={`${styles.statItem} ${styles.energyItem}`}>
                   <span className={styles.statLabel}>Energy</span>
                   <span className={styles.statValue}>{stats.energy || "N/A"}</span>
                 </div>
-                <div className={styles.statItem}>
+                <div className={`${styles.statItem} ${styles.specialItem}`}>
                   <span className={styles.statLabel}>Special</span>
                   <span className={styles.statValue}>{stats.special || "N/A"}</span>
                 </div>
@@ -733,7 +735,7 @@ export default function CharacterDetailModal({ character, onClose }) {
               </div>
             )}
 
-            {/* TRACES - Lấy từ currentKit */}
+            {/* TRACES */}
             {hasTraces && (
               <div className={styles.section}>
                 <div
@@ -754,7 +756,7 @@ export default function CharacterDetailModal({ character, onClose }) {
               </div>
             )}
 
-            {/* EIDOLONS - Lấy từ currentKit */}
+            {/* EIDOLONS */}
             {hasEidolons && (
               <div className={styles.section}>
                 <div

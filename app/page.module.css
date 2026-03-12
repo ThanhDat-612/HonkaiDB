@@ -115,7 +115,7 @@
 
 .detailHeaderSticky h2 {
   font-size: 28px;
-  margin: 0;
+  /* margin: center; */
   color: #60a5fa;
   text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
 }
@@ -225,7 +225,7 @@
 .basicStatsCard h3 {
   color: #f8fafc;
   margin: 0 0 20px 0;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -1111,6 +1111,164 @@ input:checked + .slider:before {
   transform: rotate(90deg) scale(1.1);
 }
 
+.statItem.energyItem {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(37, 99, 235, 0.25) 100%);
+  border: 1px solid #3b82f6;
+  position: relative;
+  overflow: hidden;
+}
+
+.statItem.energyItem::before {
+  content: '⚡';
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 20px;
+  opacity: 0.3;
+  color: #60a5fa;
+}
+
+.statItem.energyItem:hover {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%);
+  border-color: #60a5fa;
+  box-shadow: 0 0 15px rgba(96, 165, 250, 0.3);
+}
+
+.statItem.specialItem {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(217, 119, 6, 0.25) 100%);
+  border: 1px solid #f59e0b;
+  position: relative;
+  overflow: hidden;
+}
+
+.statItem.specialItem::before {
+  content: '✨';
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 20px;
+  opacity: 0.3;
+  color: #fbbf24;
+}
+
+.statItem.specialItem:hover {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25) 0%, rgba(217, 119, 6, 0.35) 100%);
+  border-color: #fbbf24;
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+}
+
+/* Giá trị stats cho Energy và Special */
+.statItem.energyItem .statValue {
+  color: #60a5fa;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+  font-weight: 700;
+}
+
+.statItem.specialItem .statValue {
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  font-weight: 700;
+}
+
+/* Label cho Energy và Special */
+.statItem.energyItem .statLabel {
+  color: #93c5fd;
+  font-weight: 700;
+}
+
+.statItem.specialItem .statLabel {
+  color: #fcd34d;
+  font-weight: 700;
+}
+
+/* TĂNG CỠ CHỮ CHO CÁC PHẦN THÔNG TIN */
+
+/* 1. Character Story */
+.descriptionText {
+  color: #e2e8f0;
+  line-height: 1.8;
+  font-size: 16px; /* Tăng từ 15px lên 16px */
+  margin: 0;
+  font-style: italic;
+  position: relative;
+  padding-left: 20px;
+  border-left: 3px solid #60a5fa;
+}
+
+/* 2. Skills - Tên skill */
+.skillInfo h4 {
+  margin: 0;
+  font-size: 20px; /* Tăng từ 18px lên 20px */
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+/* 3. Skills - Mô tả skill */
+.skillInfo p {
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.6;
+  font-size: 15px; /* Tăng từ 14px lên 15px */
+}
+
+/* 4. Skill Category */
+.skillCategory {
+  color: #94a3b8;
+  font-size: 16px; /* Tăng từ 14px lên 16px */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 20px 0 10px 0;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #334155;
+}
+
+/* 5. Enlarged Image Modal - Tăng cỡ chữ */
+.enlargedImageInfo h3 {
+  color: #60a5fa;
+  margin: 0 0 15px 0;
+  font-size: 26px; /* Tăng từ 24px lên 26px */
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #334155;
+}
+
+.enlargedImageDescription {
+  color: #e2e8f0;
+  line-height: 1.8;
+  font-size: 17px; /* Tăng từ 16px lên 17px */
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* 6. Responsive cho mobile - Điều chỉnh font size */
+@media (max-width: 768px) {
+  /* Giữ nguyên các điều chỉnh responsive hiện có và thêm: */
+  
+  .descriptionText {
+    font-size: 15px; /* Giảm nhẹ trên mobile */
+  }
+  
+  .skillInfo h4 {
+    font-size: 18px;
+  }
+  
+  .skillInfo p {
+    font-size: 14px;
+  }
+  
+  .skillCategory {
+    font-size: 15px;
+  }
+  
+  .enlargedImageInfo h3 {
+    font-size: 22px;
+  }
+  
+  .enlargedImageDescription {
+    font-size: 15px;
+  }
+}
 /* Responsive cho enlarged modal */
 @media (max-width: 768px) {
   .enlargedImageContent {
