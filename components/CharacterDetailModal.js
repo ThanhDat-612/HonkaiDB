@@ -249,11 +249,11 @@
 //                   <span className={styles.statLabel}>SPD</span>
 //                   <span className={styles.statValue}>{stats.speed || "N/A"}</span>
 //                 </div>
-//                 <div className={styles.statItem}>
+//                 <div className={`${styles.statItem} ${styles.energyItem}`}>
 //                   <span className={styles.statLabel}>Energy</span>
 //                   <span className={styles.statValue}>{stats.energy || "N/A"}</span>
 //                 </div>
-//                 <div className={styles.statItem}>
+//                 <div className={`${styles.statItem} ${styles.specialItem}`}>
 //                   <span className={styles.statLabel}>Special</span>
 //                   <span className={styles.statValue}>{stats.special || "N/A"}</span>
 //                 </div>
@@ -465,6 +465,7 @@ export default function CharacterDetailModal({ character, onClose }) {
               name="default"
               alt={variant.name?.[lang]}
               className={styles.skillIcon}
+
             />
           </div>
 
@@ -503,15 +504,13 @@ export default function CharacterDetailModal({ character, onClose }) {
       if (buffed) {
         fileName = `${key}_fix`;
       }
-      // console.log('Buffed state:', buffed, 'Key:', key, 'Filename:', fileName);
-      // Nếu không ở chế độ buffed, vẫn dùng file gốc là key
       
       return (
         <div key={key} className={styles.skillRow}>
           <div 
             className={styles.skillImage}
             onClick={() => folder === "eidolons" && setEnlargedImage({
-              src: `/${folder}/${charId}/${fileName}.png`,
+              src: `/${folder}/${charId}/${fileName}.webp`,
               name: data.name?.[lang] || `${labelPrefix} ${key}`,
               description: data.description?.[lang] || "No description."
             })}
@@ -522,8 +521,8 @@ export default function CharacterDetailModal({ character, onClose }) {
               name={fileName}
               alt={data.name?.[lang]}
               className={styles.skillIcon}
-              // Thêm fallback để nếu không tìm thấy file _fixed thì dùng file gốc
               fallbackName={!buffed ? undefined : key}
+
             />
             {folder === "eidolons" && (
               <div className={styles.imageZoomHint}>🔍</div>
@@ -623,10 +622,13 @@ export default function CharacterDetailModal({ character, onClose }) {
                 border: 'none'
               }}
             >
-              <img
-                src={character.image}
-                className={styles.detailImageFull}
+              {/* SỬA: Dùng SmartImage cho ảnh nhân vật chính */}
+              <SmartImage
+                basePath="/characters"
+                name={character.id}
                 alt={character.name}
+                className={styles.detailImageFull}
+
               />
             </div>
             
@@ -660,27 +662,31 @@ export default function CharacterDetailModal({ character, onClose }) {
                 </div>
               </div>
               
-              {/* ELEMENT & PATH BADGES */}
+              {/* ELEMENT & PATH BADGES - SỬA: Dùng SmartImage */}
               <div className={styles.badgeContainer}>
                 {character.element && (
                   <div 
                     className={styles.elementBadge}
                     data-element={character.element.toLowerCase()}
                   >
-                    <img 
-                      src={`/elements/${character.element.toLowerCase()}.png`} 
-                      className={styles.elementIcon} 
-                      alt={character.element} 
+                    <SmartImage
+                      basePath="/elements"
+                      name={character.element.toLowerCase()}
+                      className={styles.elementIcon}
+                      alt={character.element}
+
                     />
                     <span>{character.element}</span>
                   </div>
                 )}
                 {character.path && (
                   <div className={styles.pathBadge}>
-                    <img 
-                      src={`/paths/${character.path.toLowerCase()}.png`} 
-                      className={styles.pathIcon} 
-                      alt={character.path} 
+                    <SmartImage
+                      basePath="/paths"
+                      name={character.path.toLowerCase()}
+                      className={styles.pathIcon}
+                      alt={character.path}
+
                     />
                     <span>{character.path}</span>
                   </div>

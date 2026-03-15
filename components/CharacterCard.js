@@ -7,7 +7,7 @@ export default function CharacterCard({ character, onClick }) {
 
       {/* IMAGE */}
       <div className={styles.cardImage}>
-        <img src={character.image} alt={character.name} />
+        <img src={`/characters/${character.id}.webp`} alt={character.name} />
       </div>
 
       {/* RIGHT SIDE */}
@@ -20,12 +20,12 @@ export default function CharacterCard({ character, onClick }) {
 
         <div className={styles.iconRow}>
           <img
-            src={`/elements/${character.element.toLowerCase()}.png`}
+            src={`/elements/${character.element.toLowerCase()}.webp`}
             className={styles.icon}
           />
 
           <img
-            src={`/paths/${character.path.toLowerCase()}.png`}
+            src={`/paths/${character.path.toLowerCase()}.webp`}
             className={styles.icon}
           />
         </div>

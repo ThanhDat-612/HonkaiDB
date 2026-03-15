@@ -44,7 +44,7 @@ export default function CharacterList({ characters}) {
           {elements.map((el) => (
             <img 
               key={el}
-              src={`/elements/${el}.png`} 
+              src={`/elements/${el}.webp`} 
               alt={el}
               className={`${styles.filterIcon} ${elementFilter === el ? styles.active : ""}`}
               // Nếu click vào icon đang active thì reset về "all"
@@ -59,7 +59,7 @@ export default function CharacterList({ characters}) {
           {paths.map((path) => (
             <img
               key={path}
-              src={`/paths/${path}.png`}
+              src={`/paths/${path}.webp`}
               alt={path}
               className={`${styles.filterIcon} ${pathFilter === path ? styles.active : ""}`}
               onClick={() => setPathFilter(path === pathFilter ? "all" : path)}

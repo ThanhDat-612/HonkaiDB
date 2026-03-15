@@ -8,39 +8,23 @@ export default function SmartImage({
   alt,
   className,
   fallback = "/placeholder.png",
-  fallbackName // Thêm prop mới
+  fallbackName
 }) {
-
-  const extensions = ["png", "webp", "jpg", "jpeg", "svg"];
-  
-  // State để lưu tên file hiện tại và index
-  const [currentName, setCurrentName] = useState(name);
-  const [index, setIndex] = useState(0);
-  const [src, setSrc] = useState(`${basePath}/${currentName}.${extensions[0]}`);
+  const [src, setSrc] = useState(`${basePath}/${name}.webp`);
+  const [usedFallbackName, setUsedFallbackName] = useState(false);
 
   // Reset state khi name thay đổi
   useEffect(() => {
-    setCurrentName(name);
-    setIndex(0);
-    setSrc(`${basePath}/${name}.${extensions[0]}`);
+    setSrc(`${basePath}/${name}.webp`);
+    setUsedFallbackName(false);
   }, [name, basePath]);
 
   const handleError = () => {
-    const next = index + 1;
-
-    // Thử với extension tiếp theo
-    if (next < extensions.length) {
-      setIndex(next);
-      setSrc(`${basePath}/${currentName}.${extensions[next]}`);
-    } 
-    // Nếu đã hết extension và có fallbackName, thử với fallbackName
-    else if (fallbackName && currentName !== fallbackName) {
-      setCurrentName(fallbackName);
-      setIndex(0);
-      setSrc(`${basePath}/${fallbackName}.${extensions[0]}`);
-    }
-    // Nếu vẫn không được, dùng fallback cuối cùng
-    else {
+    // Nếu có fallbackName và chưa thử, thử với fallbackName
+    if (fallbackName && !usedFallbackName) {
+      setUsedFallbackName(true);
+      setSrc(`${basePath}/${fallbackName}.webp`);
+    } else {
       setSrc(fallback);
     }
   };
