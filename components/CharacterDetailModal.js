@@ -266,7 +266,7 @@ export default function CharacterDetailModal({ character, onClose }) {
             <div className={styles.descriptionContent}>
               <div className={styles.descriptionText}>
                 <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>
-                  Linh Hồn Ký Ức của {character.name}. Được triệu hồi thông qua kỹ năng và tuyệt kỹ, chiến đấu cùng nhân vật chính.
+                  Linh Hồn Ký Ức của {character.name}.
                 </p>
               </div>
             </div>

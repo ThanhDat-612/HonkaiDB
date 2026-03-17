@@ -7,7 +7,7 @@ export default function SmartImage({
   name,
   alt,
   className,
-  fallback = "/placeholder.png",
+  fallback = "/placeholder.webp",
   fallbackName
 }) {
   const [src, setSrc] = useState(`${basePath}/${name}.webp`);
