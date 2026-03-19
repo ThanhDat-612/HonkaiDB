@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 import { connectDB } from "@/lib/mongodb";
 import Character from "@/models/Character";
 import CharacterList from "@/components/CharacterList";
-
+import Link from "next/link";
 export const metadata = {
   title: "Honkai Starrail DB",
 };
@@ -20,8 +20,8 @@ export default async function Home() {
         <div className={styles.menu}>
           <a href="#">Home</a>
           <a href="#">Characters</a>
-          <a href="#">Light Cones</a>
-          <a href="#">Relics</a>
+          <a href="lightcones">Light Cones</a>
+          <a href="relics">Relics</a>
         </div>
 
         <div className={styles.actions}>

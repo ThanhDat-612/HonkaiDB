@@ -131,20 +131,69 @@ export default function CharacterDetailModal({ character, onClose }) {
       <div>
         <h3 className={styles.skillCategory}>{label}</h3>
         {Object.entries(sectionData.variants).map(([variantKey, variant]) => (
-          <div key={`memo-${sectionKey}-${variantKey}`} className={styles.skillRow}>
-            <div className={styles.skillImage}>
-              <SmartImage
-                basePath={`/memosprite/${charId}`}
-                name={`memo_${sectionKey}`}
-                alt={variant.name?.[lang]}
-                className={styles.skillIcon}
-                fallback="/placeholder.png"
-              />
+          <div key={`memo-${sectionKey}-${variantKey}`}>
+
+            {/* Skill chính */}
+            <div className={styles.skillRow}>
+              <div className={styles.skillImage}>
+                <SmartImage
+                  basePath={`/memosprite/${charId}`}
+                  name={`memo_${sectionKey}`}
+                  alt={variant.name?.[lang]}
+                  className={styles.skillIcon}
+                  fallback="/placeholder.png"
+                />
+              </div>
+              <div className={styles.skillInfo}>
+                <h4>{variant.name?.[lang] || variantKey}</h4>
+                {formatDescription(variant.description?.[lang])}
+              </div>
             </div>
-            <div className={styles.skillInfo}>
-              <h4>{variant.name?.[lang] || variantKey}</h4>
-              {formatDescription(variant.description?.[lang])}
-            </div>
+
+            {/* Supports — chỉ render nếu có */}
+            {variant.supports?.length > 0 && (
+              <div className={styles.supportsContainer}>
+                {variant.supports.map((support, i) => {
+                  // Lấy tên nhân vật từ field image, vd "/characters/aglaea.webp" → "aglaea"
+                  const charName = support.image
+                    ? support.image.split("/").pop().replace(".webp", "")
+                    : null;
+
+                  return (
+                    <div key={i} className={styles.supportRow}>
+                      {/* Ảnh nhân vật được hỗ trợ */}
+                      <div className={styles.supportImageWrapper}>
+                        {charName ? (
+                          <SmartImage
+                            basePath={`/memosprite/${charId}/memo_skill_buff`}
+                            name={charName}
+                            alt={support.name?.[lang]}
+                            className={styles.supportIcon}
+                            fallback="/placeholder.png"
+                            lazy={true}
+                          />
+                        ) : (
+                          <div className={styles.supportIconGeneric}>✦</div>
+                        )}
+                      </div>
+
+                      <div className={styles.supportInfo}>
+                        <div className={styles.supportHeader}>
+                          <span className={styles.supportName}>
+                            【{support.name?.[lang] || support.name?.en}】
+                          </span>
+                          <span className={styles.supportType}>{support.type}</span>
+                        </div>
+                        <div className={styles.supportDesc}>
+                          {formatDescription(support.description?.[lang] || support.description?.en)}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
           </div>
         ))}
       </div>
