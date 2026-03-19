@@ -18,10 +18,10 @@ export default async function Home() {
         <div className={styles.logo}>HonkaiDB</div>
 
         <div className={styles.menu}>
-          <a href="#">Home</a>
           <a href="#">Characters</a>
           <a href="lightcones">Light Cones</a>
           <a href="relics">Relics</a>
+          <a href="currentWar">Current War</a>
         </div>
 
         <div className={styles.actions}>
