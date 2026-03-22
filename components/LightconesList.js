@@ -118,6 +118,7 @@ function LightConeModal({ lc, lang, onClose }) {
               alt={nameStr}
               className={styles.lcModalImageLarge}
               loading="lazy"
+              decoding="async"
               onError={(e) => { e.target.src = "/placeholder.webp"; }}
             />
             {/* gradient mờ dưới ảnh */}
@@ -138,6 +139,7 @@ function LightConeModal({ lc, lang, onClose }) {
                 alt={lc.path}
                 style={{ width: 28, height: 28 }}
                 loading="lazy"
+                decoding="async"
                 onError={(e) => { e.target.style.display = "none"; }}
               />
               <span style={{ color: pathColor, fontSize: 15, fontWeight: 600, letterSpacing: "1px", textTransform: "uppercase" }}>
