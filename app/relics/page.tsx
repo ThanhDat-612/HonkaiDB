@@ -1,15 +1,16 @@
 import styles from "../page.module.css";
 import RelicList from "@/components/RelicList";
+import Relic from "@/models/Relic";
+import {connectDB} from "@/lib/mongodb"; // ← đường dẫn tuỳ project của bạn
 
 export const metadata = {
   title: "Relics — HonkaiDB",
 };
 
 export default async function RelicsPage() {
-  // TODO: Kết nối DB sau
-  // await connectDB();
-  // const rawRelics = await Relic.find({});
-  // const relics = JSON.parse(JSON.stringify(rawRelics));
+  await connectDB();
+  const rawRelics = await Relic.find({});
+  const relics = JSON.parse(JSON.stringify(rawRelics));
 
   return (
     <div className={styles.parent}>
@@ -34,8 +35,8 @@ export default async function RelicsPage() {
         <h3>Coming soon!</h3>
       </div>
 
-      {/* MAIN CONTENT — dùng mock data nên không cần truyền props */}
-      {/* <RelicList /> */}
+      {/* MAIN CONTENT */}
+      <RelicList relics={relics} />  {/* ← bỏ comment, truyền data thật */}
     </div>
   );
 }

@@ -2,121 +2,134 @@
 
 import { useState } from "react";
 import styles from "../app/page.module.css";
-import RelicCard, { MOCK_RELICS } from "@/components/RelicCard";
+import RelicCard, { relicImg, formatBonus } from "@/components/RelicCard";
 
-/**
- * @param {Object} props
- * @param {Array} props.relics - Danh sách relics từ DB (nếu có). Nếu không thì dùng mock data.
- */
+const CAVERN_SLOTS = ["head", "hands", "body", "feet"];
+const PLANAR_SLOTS = ["planar_sphere", "link_rope"];
+const SLOT_LABELS  = {
+  head: "Head", hands: "Hands", body: "Body", feet: "Feet",
+  planar_sphere: "Planar Sphere", link_rope: "Link Rope",
+};
+
 export default function RelicList({ relics }) {
-  const data = relics?.length ? relics : MOCK_RELICS;
+  const data = relics ?? [];
 
-  const [typeFilter, setTypeFilter] = useState("all"); // "all" | "cavern" | "planar"
+  const [lang, setLang]                   = useState("vi");
   const [selectedRelic, setSelectedRelic] = useState(null);
 
-  const filtered = data.filter((r) =>
-    typeFilter === "all" ? true : r.type === typeFilter
-  );
+  const cavernRelics = data.filter((r) => r.type === "cavern");
+  const planarRelics = data.filter((r) => r.type === "planar");
 
   return (
     <div className={styles.div3}>
 
-      {/* PAGE TITLE */}
+      {/* HEADER */}
       <div className={styles.pageHeader}>
-        <h2 className={styles.pageTitle}>
-          <span className={styles.pageTitleIcon}>💎</span>
-          Relics
-        </h2>
-        <p className={styles.pageSubtitle}>Ancient artifacts that enhance the Trailblazer's power</p>
-      </div>
-
-      {/* TYPE FILTER */}
-      <div className={styles.filterSection}>
-        <div className={styles.filterGroup}>
-          <span>TYPE</span>
-          {[
-            { key: "all", label: "All Sets" },
-            { key: "cavern", label: "🏛 Cavern Relics" },
-            { key: "planar", label: "🌌 Planar Ornaments" },
-          ].map(({ key, label }) => (
-            <button
-              key={key}
-              className={`${styles.typeFilterBtn} ${typeFilter === key ? styles.typeFilterActive : ""}`}
-              onClick={() => setTypeFilter(key)}
-            >
-              {label}
-            </button>
-          ))}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <h2 className={styles.pageTitle}>
+              <span className={styles.pageTitleIcon}>💎</span>Relics
+            </h2>
+            <p className={styles.pageSubtitle}>Ancient artifacts that enhance the Trailblazer's power</p>
+          </div>
+          <button
+            className={styles.langBtn}
+            onClick={() => setLang((l) => (l === "vi" ? "en" : "vi"))}
+          >
+            {lang.toUpperCase()}
+          </button>
         </div>
       </div>
 
       <hr className={styles.divider} />
 
-      {/* COUNT */}
       <p className={styles.resultCount}>
-        Showing <strong>{filtered.length}</strong> relic sets
+        Showing <strong>{cavernRelics.length}</strong> Cavern sets &amp;{" "}
+        <strong>{planarRelics.length}</strong> Planar sets
       </p>
 
-      {/* GRID */}
-      <div className={styles.relicGrid}>
-        {filtered.length > 0 ? (
-          filtered.map((r) => (
-            <RelicCard
-              key={r.id || r._id}
-              relic={r}
-              onClick={() => setSelectedRelic(r)}
-            />
-          ))
-        ) : (
-          <p className={styles.noResult}>Không tìm thấy Relic phù hợp.</p>
-        )}
+      {/* CAVERN SECTION */}
+      <div className={styles.relicSection}>
+        <div className={styles.relicSectionHeader}>
+          <span className={styles.relicColumnBadgeCavern}>🏛 Cavern Relics</span>
+          <span className={styles.relicColumnCount}>{cavernRelics.length} sets · 4-piece &amp; 2-piece bonuses</span>
+        </div>
+        <div className={styles.relicGrid}>
+          {cavernRelics.length > 0 ? (
+            cavernRelics.map((r) => (
+              <RelicCard key={r.id} relic={r} lang={lang} onClick={() => setSelectedRelic(r)} />
+            ))
+          ) : (
+            <p className={styles.noResult}>No Cavern Relics found.</p>
+          )}
+        </div>
+      </div>
+
+      <hr className={styles.divider} style={{ margin: "24px 0" }} />
+
+      {/* PLANAR SECTION */}
+      <div className={styles.relicSection}>
+        <div className={styles.relicSectionHeader}>
+          <span className={styles.relicColumnBadgePlanar}>🌌 Planar Ornaments</span>
+          <span className={styles.relicColumnCount}>{planarRelics.length} sets · 2-piece bonuses only</span>
+        </div>
+        <div className={styles.relicGrid}>
+          {planarRelics.length > 0 ? (
+            planarRelics.map((r) => (
+              <RelicCard key={r.id} relic={r} lang={lang} onClick={() => setSelectedRelic(r)} />
+            ))
+          ) : (
+            <p className={styles.noResult}>No Planar Ornaments found.</p>
+          )}
+        </div>
       </div>
 
       {/* DETAIL MODAL */}
-      {selectedRelic && (
-        <div className={styles.modal} onClick={() => setSelectedRelic(null)}>
-          <div className={styles.relicModal} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.closeBtn} onClick={() => setSelectedRelic(null)}>✕</button>
+      {selectedRelic && (() => {
+        const isCavern = selectedRelic.type === "cavern";
+        const slots    = isCavern ? CAVERN_SLOTS : PLANAR_SLOTS;
+        const nameStr  = selectedRelic.name?.[lang] || selectedRelic.name?.en || selectedRelic._id;
+        const bonus2   = selectedRelic["2-piece"]?.[lang] || selectedRelic["2-piece"]?.en;
+        const bonus4   = selectedRelic["4-piece"]?.[lang] || selectedRelic["4-piece"]?.en;
 
-            <div className={styles.relicModalHeader}>
-              <span className={`${styles.relicTypeBadge} ${styles.relicTypeBadgeLg}`}>
-                {selectedRelic.type === "cavern" ? "🏛 Cavern Relic" : "🌌 Planar Ornament"}
-              </span>
-              <h2 className={styles.relicModalName}>{selectedRelic.name}</h2>
-            </div>
+        return (
+          <div className={styles.modal} onClick={() => setSelectedRelic(null)}>
+            <div className={styles.relicModal} onClick={(e) => e.stopPropagation()}>
+              <button className={styles.closeBtn} onClick={() => setSelectedRelic(null)}>✕</button>
 
-            {/* Pieces grid */}
-            <div className={styles.relicPiecesGrid}>
-              {selectedRelic.pieces.map((piece) => (
-                <div key={piece.slot} className={styles.relicPieceItem}>
-                  <img
-                    src={`/relics/${selectedRelic.id}_${piece.slot}.webp`}
-                    alt={piece.name}
-                    className={styles.relicPieceImg}
-                    loading="lazy"
-                    onError={(e) => { e.target.src = "/placeholder.webp"; }}
-                  />
-                  <p className={styles.relicPieceName}>{piece.name}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Set bonuses */}
-            <div className={styles.relicModalBonuses}>
-              <div className={styles.relicModalBonus}>
-                <span className={styles.relicBonusTag}>2-Piece Bonus</span>
-                <p>{selectedRelic.set2}</p>
+              <div className={styles.relicModalHeader}>
+                <span className={`${styles.relicTypeBadge} ${styles.relicTypeBadgeLg}`}>
+                  {isCavern ? "🏛 Cavern Relic" : "🌌 Planar Ornament"}
+                </span>
+                <h2 className={styles.relicModalName}>{nameStr}</h2>
               </div>
-              {selectedRelic.set4 && (
-                <div className={`${styles.relicModalBonus} ${styles.relicModalBonus4}`}>
-                  <span className={`${styles.relicBonusTag} ${styles.relicBonusTag4}`}>4-Piece Bonus</span>
-                  <p>{selectedRelic.set4}</p>
+
+              <div className={styles.relicModalImageRow}>
+                <img
+                  src={relicImg(selectedRelic)}
+                  alt={nameStr}
+                  className={styles.relicModalImage}
+                  loading="lazy"
+                  onError={(e) => { e.target.src = "/placeholder.webp"; }}
+                />
+              </div>
+
+              <div className={styles.relicModalBonuses}>
+                <div className={styles.relicModalBonus}>
+                  <span className={styles.relicBonusTag}>2-Piece Bonus</span>
+                  <p>{formatBonus(bonus2)}</p>
                 </div>
-              )}
+                {bonus4 && (
+                  <div className={`${styles.relicModalBonus} ${styles.relicModalBonus4}`}>
+                    <span className={`${styles.relicBonusTag} ${styles.relicBonusTag4}`}>4-Piece Bonus</span>
+                    <p>{formatBonus(bonus4)}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
