@@ -784,3 +784,33 @@ input:checked + .slider:before { transform: translateX(26px); }
   .enlargedImageInfo { padding: 15px 20px; }
   .closeEnlargedBtn { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 20px; }
 }
+/* ─── ELATION SKILL ────────────────────────────────────────────── */
+.elationCodeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, rgba(249, 199, 79, 0.15), rgba(249, 199, 79, 0.05));
+  border: 1px solid rgba(249, 199, 79, 0.4);
+  border-radius: 8px;
+}
+
+.elationCodeLabel {
+  font-size: 12px;
+  color: #f9c74f;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.elationCodeValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(249, 199, 79, 0.25);
+  border-radius: 6px;
+  padding: 2px 10px;
+  letter-spacing: 1px;
+  font-family: monospace;
+}

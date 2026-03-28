@@ -42,6 +42,8 @@ export default function CharacterDetailModal({ character, onClose }) {
   const eidolons = currentKit?.eidolons || {};
   const charId = character.id;
   const stats = character.stats || {};
+  const isElation = character?.path?.toLowerCase() === "elation";
+  const elation = currentKit?.elation || null;
 
   // ─── Memosprite data ───────────────────────────────────────────────
   const memoName = memosprite?.name?.[lang] || memosprite?.name?.en || "Memosprite";
@@ -361,6 +363,52 @@ export default function CharacterDetailModal({ character, onClose }) {
     );
   };
 
+  // ─── RENDER ELATION SKILL SECTION ────────────────────────────────
+  const renderElationSection = () => {
+    if (!elation) return null;
+    const name = elation.name?.[lang] || elation.name?.en || "Elation Skill";
+    const description = elation.description?.[lang] || elation.description?.en;
+    const code = elation.code;
+
+    return (
+      <div className={styles.section}>
+        <div
+          className={styles.sectionHeader}
+          onClick={() => setOpenSection(openSection === "elation" ? null : "elation")}
+          style={{ color: '#f9c74f' }}
+        >
+          ✦ Elation Skill
+          <span className={styles.arrow}>{openSection === "elation" ? "▼" : "▶"}</span>
+        </div>
+        {openSection === "elation" && (
+          <div className={styles.sectionContent}>
+            <div className={styles.skillRow}>
+              <div className={styles.skillImage}>
+                <SmartImage
+                  basePath={`/skills/elation/${charId}`}
+                  name="default"
+                  alt={name}
+                  className={styles.skillIcon}
+                  fallback="/placeholder.png"
+                />
+              </div>
+              <div className={styles.skillInfo}>
+                <h4 style={{ color: '#f9c74f' }}>{name}</h4>
+                {formatDescription(description)}
+                {code !== undefined && code !== null && (
+                  <div className={styles.elationCodeBadge}>
+                    <span className={styles.elationCodeLabel}>🎟 Participation Code</span>
+                    <span className={styles.elationCodeValue}>{code}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // ─── RENDER CHARACTER TAB CONTENT ─────────────────────────────────
   const renderCharacterTab = () => (
     <div className={styles.detailBody}>
@@ -510,6 +558,9 @@ export default function CharacterDetailModal({ character, onClose }) {
             )}
           </div>
         )}
+
+        {/* ELATION SKILL — chỉ hiển thị với path Elation */}
+        {isElation && renderElationSection()}
       </div>
     </div>
   );
