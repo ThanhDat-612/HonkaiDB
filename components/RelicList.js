@@ -48,40 +48,47 @@ export default function RelicList({ relics }) {
         <strong>{planarRelics.length}</strong> Planar sets
       </p>
 
-      {/* CAVERN SECTION */}
-      <div className={styles.relicSection}>
-        <div className={styles.relicSectionHeader}>
-          <span className={styles.relicColumnBadgeCavern}>🏛 Cavern Relics</span>
-          <span className={styles.relicColumnCount}>{cavernRelics.length} sets · 4-piece &amp; 2-piece bonuses</span>
-        </div>
-        <div className={styles.relicGrid}>
-          {cavernRelics.length > 0 ? (
-            cavernRelics.map((r) => (
-              <RelicCard key={r.id} relic={r} lang={lang} onClick={() => setSelectedRelic(r)} />
-            ))
-          ) : (
-            <p className={styles.noResult}>No Cavern Relics found.</p>
-          )}
-        </div>
-      </div>
+      {/* 2-COLUMN LAYOUT */}
+      <div className={styles.relicTwoCol}>
 
-      <hr className={styles.divider} style={{ margin: "24px 0" }} />
+        {/* LEFT: CAVERN */}
+        <div className={styles.relicColumn}>
+          <div className={styles.relicColumnHeader}>
+            <span className={styles.relicColumnBadgeCavern}>🏛 Cavern Relics</span>
+            <span className={styles.relicColumnCount}>{cavernRelics.length} sets</span>
+          </div>
+          <div className={styles.relicColumnSubtitle}>4-piece &amp; 2-piece bonuses</div>
+          <div className={styles.relicGrid}>
+            {cavernRelics.length > 0 ? (
+              cavernRelics.map((r) => (
+                <RelicCard key={r.id} relic={r} lang={lang} onClick={() => setSelectedRelic(r)} />
+              ))
+            ) : (
+              <p className={styles.noResult}>No Cavern Relics found.</p>
+            )}
+          </div>
+        </div>
 
-      {/* PLANAR SECTION */}
-      <div className={styles.relicSection}>
-        <div className={styles.relicSectionHeader}>
-          <span className={styles.relicColumnBadgePlanar}>🌌 Planar Ornaments</span>
-          <span className={styles.relicColumnCount}>{planarRelics.length} sets · 2-piece bonuses only</span>
+        <div className={styles.relicColDivider} />
+
+        {/* RIGHT: PLANAR */}
+        <div className={styles.relicColumn}>
+          <div className={styles.relicColumnHeader}>
+            <span className={styles.relicColumnBadgePlanar}>🌌 Planar Ornaments</span>
+            <span className={styles.relicColumnCount}>{planarRelics.length} sets</span>
+          </div>
+          <div className={styles.relicColumnSubtitle}>2-piece bonuses only</div>
+          <div className={styles.relicGrid}>
+            {planarRelics.length > 0 ? (
+              planarRelics.map((r) => (
+                <RelicCard key={r.id} relic={r} lang={lang} onClick={() => setSelectedRelic(r)} />
+              ))
+            ) : (
+              <p className={styles.noResult}>No Planar Ornaments found.</p>
+            )}
+          </div>
         </div>
-        <div className={styles.relicGrid}>
-          {planarRelics.length > 0 ? (
-            planarRelics.map((r) => (
-              <RelicCard key={r.id} relic={r} lang={lang} onClick={() => setSelectedRelic(r)} />
-            ))
-          ) : (
-            <p className={styles.noResult}>No Planar Ornaments found.</p>
-          )}
-        </div>
+
       </div>
 
       {/* DETAIL MODAL */}

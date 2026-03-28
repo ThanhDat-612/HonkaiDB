@@ -688,11 +688,11 @@ input:checked + .slider:before { transform: translateX(26px); }
   margin-bottom: 8px;
 }
 
-/* Each column's inner card grid — single column of cards stacked */
+/* Each column's inner card grid — thumbnail grid */
 .relicColumnGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
 }
 /* ── RELIC THUMBNAIL (grid view) ─────────────────────────────── */
 .relicThumb {
