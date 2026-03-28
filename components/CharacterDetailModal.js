@@ -385,8 +385,8 @@ export default function CharacterDetailModal({ character, onClose }) {
             <div className={styles.skillRow}>
               <div className={styles.skillImage}>
                 <SmartImage
-                  basePath={`/skills/elation/${charId}`}
-                  name="default"
+                  basePath={`/elation/${charId}`}
+                  name="elation_skill"
                   alt={name}
                   className={styles.skillIcon}
                   fallback="/placeholder.png"
