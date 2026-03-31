@@ -26,12 +26,6 @@ export default function RelicList({ relics }) {
       {/* HEADER */}
       <div className={styles.pageHeader}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <h2 className={styles.pageTitle}>
-              <span className={styles.pageTitleIcon}>💎</span>Relics
-            </h2>
-            <p className={styles.pageSubtitle}>Ancient artifacts that enhance the Trailblazer's power</p>
-          </div>
           <button
             className={styles.langBtn}
             onClick={() => setLang((l) => (l === "vi" ? "en" : "vi"))}
@@ -54,7 +48,7 @@ export default function RelicList({ relics }) {
         {/* LEFT: CAVERN */}
         <div className={styles.relicColumn}>
           <div className={styles.relicColumnHeader}>
-            <span className={styles.relicColumnBadgeCavern}>🏛 Cavern Relics</span>
+            <span className={styles.relicColumnBadgeCavern}> Cavern Relics</span>
             <span className={styles.relicColumnCount}>{cavernRelics.length} sets</span>
           </div>
           <div className={styles.relicColumnSubtitle}>4-piece &amp; 2-piece bonuses</div>
@@ -74,7 +68,7 @@ export default function RelicList({ relics }) {
         {/* RIGHT: PLANAR */}
         <div className={styles.relicColumn}>
           <div className={styles.relicColumnHeader}>
-            <span className={styles.relicColumnBadgePlanar}>🌌 Planar Ornaments</span>
+            <span className={styles.relicColumnBadgePlanar}> Planar Ornaments</span>
             <span className={styles.relicColumnCount}>{planarRelics.length} sets</span>
           </div>
           <div className={styles.relicColumnSubtitle}>2-piece bonuses only</div>

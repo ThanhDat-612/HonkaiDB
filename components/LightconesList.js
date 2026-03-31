@@ -187,11 +187,6 @@ export default function LightConeList({ lightcones = [] }) {
 
       <div className={styles.pageHeader}>
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-          <div>
-            <h2 className={styles.pageTitle}>
-              <span className={styles.pageTitleIcon}>🌟</span>Light Cones
-            </h2>
-          </div>
           <button
             className={styles.langBtn}
             onClick={() => setLang(l => l === "vi" ? "en" : "vi")}

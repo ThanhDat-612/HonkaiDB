@@ -18,10 +18,10 @@ export default async function RelicsPage() {
       <div className={styles.div1}>
         <div className={styles.logo}>HonkaiDB</div>
         <div className={styles.menu}>
-          <a href="/">Home</a>
           <a href="/">Characters</a>
           <a href="/lightcones">Light Cones</a>
           <a href="/relics" style={{ color: "#60a5fa" }}>Relics</a>
+          <a href="currencyWar">Currency War</a>
         </div>
         <div className={styles.actions}>
           <input type="text" placeholder="Search relic..." />

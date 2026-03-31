@@ -21,7 +21,7 @@ export default async function LightConesPage() {
           <Link href="/">Characters</Link>
           <Link href="/lightcones" style={{ color: "#60a5fa" }}>Light Cones</Link>
           <Link href="/relics">Relics</Link>
-          <a href="currentWar">Current War</a>
+          <a href="currencyWar">Currency War</a>
         </div>
         <div className={styles.actions}>
           <input type="text" placeholder="Search light cone..." />

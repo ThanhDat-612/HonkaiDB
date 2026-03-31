@@ -21,7 +21,7 @@ export default async function Home() {
           <a href="#">Characters</a>
           <a href="lightcones">Light Cones</a>
           <a href="relics">Relics</a>
-          <a href="currentWar">Current War</a>
+          <a href="currencyWar">Currency War</a>
         </div>
 
         <div className={styles.actions}>
