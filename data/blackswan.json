@@ -1,0 +1,14 @@
+{
+    "_id":"blackswan",
+    "cost": 5,
+    "icon":"/currencyWar/char/blackswan.webp",
+    "field": "off field",
+    "bond":{
+        "en":["DoT, The planet of festivities"],
+        "vi":["DoT, Hành tinh lễ hội"]
+    },
+    "special":{
+        "en":"Destiny Diviner",
+        "vi":"Nhà tiên tri"
+    }
+}

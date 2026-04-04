@@ -22,9 +22,28 @@ const T: Record<string, Record<Lang, string>> = {
 const BOND_THRESHOLDS: Record<string, number[]> = {
   "Cosmic Scholar": [2, 4, 6],
   "DoT": [2, 4, 6],
-  "Follow-up Attack": [3, 5, 7],
+  "Follow-up Attack": [3, 5, 7,9],
   "Break": [2, 4, 6, 8,10],
-  "Stellaron Hunters": [2, 3,4]
+  "Stellaron Hunters": [2, 3,4],
+  "Wolf Hunt":[3,5,7,9],
+  "IPC":[2,3],
+  "Energy": [3, 5, 7,10],
+  "Shield": [2,4],
+  "Heal": [2,4,6],
+  "Galactic Voyager": [1,2,3,4,5,6,7],
+  "The Planet of Festivities":[2,3,4,5,6],
+  "Skill Points":[2,4,6],
+  "Night Demigod":[3,5,7,9],
+  "Day Demigod":[3,4,6,9],
+  "Debuff":[2,4,6,8],
+  "Galaxy Ranger":[1,2,3],
+  "AoE":[3,5,7,9],
+  "Blooflame":[2,4,6,8],
+  "Express Cohort":[2,4,6],
+  "Expert Advisor":[1,2,3],
+  "Xianzhou":[3,5,7,10],
+  "Belobog":[2,4,6],
+  "Quantum Resonance": [2,3,4,5],
 };
 
 const t = (key: string, lang: Lang) => T[key]?.[lang] ?? key;
@@ -36,6 +55,7 @@ type Character = {
   icon: string;
   field: string;
   bond: { en: string[]; vi: string[] };
+  special?: { en: string; vi: string };
 };
 const normalizeField = (field: string | undefined) => {
   const value = String(field || "").trim().toLowerCase();
@@ -89,8 +109,8 @@ const getSynergyBgTier = (count: number, thresholds: number[]) => {
   return "bronze.webp";
 };
 
-const getSynergyBgImage = (name: string, count: number, thresholds: number[]) => {
-  if (SPECIAL_SYNERGIES.has(name)) return "special.webp";
+const getSynergyBgImage = (name: string, count: number, thresholds: number[], specialSynergies: Set<string>) => {
+  if (specialSynergies.has(name)) return `/currencyWar/synergy/bg/special.webp`;
   const tierImage = getSynergyBgTier(count, thresholds);
   return tierImage ? `/currencyWar/synergy/bg/${tierImage}` : "";
 };
@@ -99,7 +119,15 @@ const getSynergyIconImage = (name: string) => {
   return `/currencyWar/synergy/${encodeURIComponent(name)}.webp`;
 };
 
-const getSynergyIconName = (name: string, map: Map<string, string>) => {
+const getSynergyIconName = (name: string, map: Map<string, string>, specialSynergies: Set<string>, characters: Character[]) => {
+  if (specialSynergies.has(name)) {
+    // Tìm en name cho special
+    for (const c of characters) {
+      if (c.special && (c.special.en === name || c.special.vi === name)) {
+        return c.special.en;
+      }
+    }
+  }
   const mapped = map.get(name);
   if (mapped) return mapped;
   const normalized = name.trim().toLowerCase();
@@ -124,10 +152,11 @@ function CharAvatar({ char, size = 48, full = false }: { char: Character; size?:
       <img
         src={char.icon}
         alt={char._id}
-        width={full ? "100%" : size}
-        height={full ? "100%" : size}
         onError={() => setImgErr(true)}
-        style={full ? { ...baseStyle, width: "100%", height: "100%" } : { ...baseStyle, width: size, height: size }}
+        style={full
+          ? { ...baseStyle, width: "100%", height: "100%", objectFit: "cover" as const }
+          : { ...baseStyle, width: size, height: size, objectFit: "cover" as const }
+        }
       />
     );
   }
@@ -137,12 +166,18 @@ function CharAvatar({ char, size = 48, full = false }: { char: Character; size?:
       width: "100%",
       height: "100%",
       minHeight: 0,
-      background: undefined,
+      background: "rgba(15,23,42,0.8)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     } : {
       ...baseStyle,
       width: size,
       height: size,
-      background: undefined,
+      background: "rgba(15,23,42,0.8)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     }}>
       <span style={{
         display: "inline-flex",
@@ -158,7 +193,29 @@ function CharAvatar({ char, size = 48, full = false }: { char: Character; size?:
   );
 }
 
-function Slot({ data, onDrop, onDragStart, onDragEnd, isTop, dragField, invalid }: any) {
+function StarRow({ stars, color }: { stars: number; color: string }) {
+  return (
+    <div style={{
+      position: "absolute",
+      bottom: 4,
+      left: 0,
+      right: 0,
+      display: "flex",
+      justifyContent: "center",
+      gap: 2,
+      zIndex: 3,
+      pointerEvents: "none",
+    }}>
+      {Array.from({ length: stars }).map((_, i) => (
+        <svg key={i} width="10" height="10" viewBox="0 0 24 24" fill={color} style={{ filter: `drop-shadow(0 0 2px ${color}aa)` }}>
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+function Slot({ data, starLevel, onDrop, onDragStart, onDragEnd, isTop, dragField, invalid }: any) {
   const [over, setOver] = useState(false);
   const accent = data ? costColor(data.cost) : isTop ? "#f59e0b" : "#60a5fa";
   const isValidDrop = !dragField || canPlaceFieldInSlot(dragField, isTop);
@@ -178,23 +235,27 @@ function Slot({ data, onDrop, onDragStart, onDragEnd, isTop, dragField, invalid 
             ? "inset 0 0 0 4px rgba(239, 68, 68, 0.35)"
             : undefined,
       }}
-      onDragOver={(e) => { e.preventDefault(); setOver(true); }}
-      onDragEnter={(e) => { e.preventDefault(); setOver(true); }}
-      onDragLeave={() => setOver(false)}
+      onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setOver(true); }}
+      onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); setOver(true); }}
+      onDragLeave={(e) => { e.stopPropagation(); setOver(false); }}
       onDrop={(e) => {
         e.preventDefault();
         e.stopPropagation();
         setOver(false);
         onDrop();
       }}
-      onDragEnd={() => { setOver(false); onDragEnd?.(); }}
+      onDragEnd={(e) => { e.stopPropagation(); setOver(false); onDragEnd?.(); }}
       draggable={!!data}
-      onDragStart={onDragStart}
+      onDragStart={(e) => {
+        if (!data) return;
+        e.stopPropagation();
+        onDragStart?.(e);
+      }}
     >
       {data ? (
         <div className={styles.slotContent}>
           <CharAvatar char={data} full />
-          <div className={styles.costBadge} style={{ background: accent }}>{data.cost}</div>
+          {starLevel > 0 && <StarRow stars={starLevel} color="#f59e0b" />}
         </div>
       ) : <span className={styles.slotEmpty}>+</span>}
     </div>
@@ -207,6 +268,7 @@ export default function Page() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
   const [slots, setSlots] = useState<(Character | null)[]>(Array(TOTAL_SLOTS).fill(null));
+  const [starLevels, setStarLevels] = useState<Record<number, number>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [dragField, setDragField] = useState<string | null>(null);
   const [invalidSlots, setInvalidSlots] = useState<Set<number>>(new Set());
@@ -225,6 +287,17 @@ export default function Page() {
       });
     });
     return map;
+  }, [characters]);
+
+  const specialSynergies = useMemo(() => {
+    const specials = new Set<string>();
+    characters.forEach(c => {
+      if (c.special) {
+        specials.add(c.special.en);
+        specials.add(c.special.vi);
+      }
+    });
+    return specials;
   }, [characters]);
 
   useEffect(() => {
@@ -249,6 +322,15 @@ export default function Page() {
     });
   }, [characters, searchTerm, lang]);
 
+  // Nhóm nhân vật theo độ hiếm
+  const groupedChars = useMemo(() => {
+    const groups: Record<number, Character[]> = { 5: [], 4: [], 3: [], 2: [], 1: [] };
+    filteredChars.forEach(c => {
+      if (groups[c.cost]) groups[c.cost].push(c);
+    });
+    return groups;
+  }, [filteredChars]);
+
   // Logic tính toán Synergy
   const activeSynergies = useMemo(() => {
     const charMap = new Map<string, Character>();
@@ -258,14 +340,26 @@ export default function Page() {
     const counts: Record<string, number> = {};
     uniqueChars.forEach((c) => {
       normalizeBondArray(c.bond[lang]).forEach((b) => { counts[b] = (counts[b] || 0) + 1; });
+      if (c.special) {
+        const specialName = c.special[lang];
+        counts[specialName] = (counts[specialName] || 0) + 1;
+      }
     });
 
     return Object.entries(counts).map(([name, count]) => {
-      const thresholds = getBondThresholds(name, bondNameMap);
+      let thresholds = getBondThresholds(name, bondNameMap);
+      const isSpecial = specialSynergies.has(name);
+      if (isSpecial) {
+        thresholds = [1];
+      }
       const maxTier = thresholds[thresholds.length - 1];
       const activeTier = [...thresholds].reverse().find((t) => count >= t) || 0;
-      return { name, count, activeTier, maxTier, isActive: count >= thresholds[0] };
-    }).sort((a, b) => (a.isActive === b.isActive ? b.count - a.count : a.isActive ? -1 : 1));
+      return { name, count, activeTier, maxTier, isActive: count >= thresholds[0], isSpecial };
+    }).sort((a, b) => {
+      if (a.isSpecial && !b.isSpecial) return -1;
+      if (!a.isSpecial && b.isSpecial) return 1;
+      return b.count - a.count;
+    });
   }, [slots, lang]);
 
   const onDragStartChar = (e: any, c: Character, fromIndex?: number) => {
@@ -288,6 +382,28 @@ export default function Page() {
     const isTopSlot = toIndex < TOP_SLOTS;
     const isValid = canPlaceFieldInSlot(fromField, isTopSlot);
 
+    const existing = slots[toIndex];
+
+    // Nếu kéo cùng nhân vật vào slot đang có nhân vật đó → tăng sao
+    if (existing && existing._id === dragRef.current.data._id) {
+      const currentStar = starLevels[toIndex] ?? 1;
+      if (currentStar < 6) {
+        setStarLevels(prev => ({ ...prev, [toIndex]: currentStar + 1 }));
+      }
+      // Nếu kéo từ slot khác → xóa slot nguồn
+      if (dragRef.current.fromIndex !== undefined && dragRef.current.fromIndex !== toIndex) {
+        const next = [...slots];
+        next[dragRef.current.fromIndex] = null;
+        const nextInvalid = new Set(invalidSlots);
+        nextInvalid.delete(dragRef.current.fromIndex);
+        setSlots(next);
+        setInvalidSlots(nextInvalid);
+      }
+      dragRef.current = null;
+      setDragField(null);
+      return;
+    }
+
     const alreadyInSlot = slots.some((s, i) => s?._id === dragRef.current!.data._id && i !== dragRef.current!.fromIndex);
     if (alreadyInSlot) {
       dragRef.current = null;
@@ -297,9 +413,21 @@ export default function Page() {
 
     const next = [...slots];
     const nextInvalid = new Set(invalidSlots);
+    const nextStars = { ...starLevels };
     if (dragRef.current.fromIndex !== undefined) {
+      // Chuyển sao theo nhân vật khi di chuyển slot
+      const prevStar = nextStars[dragRef.current.fromIndex];
+      if (prevStar !== undefined) {
+        nextStars[toIndex] = prevStar;
+        delete nextStars[dragRef.current.fromIndex];
+      } else {
+        delete nextStars[toIndex];
+      }
       next[dragRef.current.fromIndex] = null;
       nextInvalid.delete(dragRef.current.fromIndex);
+    } else {
+      // Kéo từ pool vào → reset sao về 1
+      nextStars[toIndex] = 1;
     }
     next[toIndex] = dragRef.current.data;
     if (!isValid) {
@@ -310,6 +438,7 @@ export default function Page() {
 
     setSlots(next);
     setInvalidSlots(nextInvalid);
+    setStarLevels(nextStars);
     dragRef.current = null;
     setDragField(null);
   };
@@ -320,8 +449,11 @@ export default function Page() {
       next[dragRef.current.fromIndex] = null;
       const nextInvalid = new Set(invalidSlots);
       nextInvalid.delete(dragRef.current.fromIndex);
+      const nextStars = { ...starLevels };
+      delete nextStars[dragRef.current.fromIndex];
       setSlots(next);
       setInvalidSlots(nextInvalid);
+      setStarLevels(nextStars);
     }
     dragRef.current = null;
     setDragField(null);
@@ -350,8 +482,8 @@ export default function Page() {
         <div className={styles.synergyList}>
           {activeSynergies.map((s) => {
             const thresholds = getBondThresholds(s.name, bondNameMap);
-            const synergyBgImage = getSynergyBgImage(s.name, s.count, thresholds);
-            const synergyIconName = getSynergyIconName(s.name, bondNameMap);
+            const synergyBgImage = getSynergyBgImage(s.name, s.count, thresholds, specialSynergies);
+            const synergyIconName = getSynergyIconName(s.name, bondNameMap, specialSynergies, characters);
             return (
               <div key={s.name} className={styles.synergyItem}>
                 {/* Icon với ảnh bg tier làm nền phía sau */}
@@ -369,29 +501,31 @@ export default function Page() {
                 {/* Tên + các pip threshold cộng dồn */}
                 <div className={styles.synergyInfo}>
                   <span className={styles.synergyName}>{s.name}</span>
-                  <div className={styles.synergyPips}>
-                    {thresholds.map((threshold, idx) => {
-                      const isReached = s.count >= threshold;
-                      const tierLabel = idx === 0 ? "bronze" : idx === 1 ? "silver" : "gold";
-                      return (
-                        <div
-                          key={threshold}
-                          className={`${styles.synergyPip} ${isReached ? styles[`pip_${tierLabel}`] : styles.pipInactive}`}
-                          title={`${threshold} nhân vật`}
-                        >
-                          {threshold}
-                        </div>
-                      );
-                    })}
-                  </div>
+                  {!s.isSpecial && (
+                    <div className={styles.synergyPips}>
+                      {thresholds.map((threshold, idx) => {
+                        const isReached = s.count >= threshold;
+                        const tierLabel = idx === 0 ? "bronze" : idx === 1 ? "silver" : "gold";
+                        return (
+                          <div
+                            key={threshold}
+                            className={`${styles.synergyPip} ${isReached ? styles[`pip_${tierLabel}`] : styles.pipInactive}`}
+                            title={`${threshold} nhân vật`}
+                          >
+                            {threshold}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
-                <span className={styles.synergyCount}>{s.count}/{s.maxTier}</span>
+                {!s.isSpecial && <span className={styles.synergyCount}>{s.count}/{s.maxTier}</span>}
               </div>
             );
           })}
         </div>
-        <button className={styles.clearBtn} onClick={() => { setSlots(Array(TOTAL_SLOTS).fill(null)); setInvalidSlots(new Set()); }}>{t("clearAll", lang)}</button>
+        <button className={styles.clearBtn} onClick={() => { setSlots(Array(TOTAL_SLOTS).fill(null)); setInvalidSlots(new Set()); setStarLevels({}); }}>{t("clearAll", lang)}</button>
       </div>
 
       <div className={styles.warMain} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); e.stopPropagation(); onDropToRemove(); }}>
@@ -400,6 +534,7 @@ export default function Page() {
             <Slot
               key={i}
               data={s}
+              starLevel={starLevels[i] ?? 1}
               isTop
               invalid={invalidSlots.has(i)}
               dragField={dragField}
@@ -409,11 +544,13 @@ export default function Page() {
             />
           ))}
         </div>
+        <div style={{ height: 28, flexShrink: 0 }} />
         <div className={styles.teamRow} style={{ gridTemplateColumns: `repeat(${BOT_SLOTS}, 70px)` }}>
           {slots.slice(TOP_SLOTS).map((s, i) => (
             <Slot
               key={i + TOP_SLOTS}
               data={s}
+              starLevel={starLevels[i + TOP_SLOTS] ?? 1}
               isTop={false}
               invalid={invalidSlots.has(i + TOP_SLOTS)}
               dragField={dragField}
@@ -427,24 +564,33 @@ export default function Page() {
 
       <div className={styles.charPool}>
         <div className={styles.charPoolList}>
-          {loading ? <span>{t("loading", lang)}</span> : filteredChars.map((c) => (
-            <div
-              key={c._id}
-              className={styles.charChip}
-              draggable
-              onDragStart={(e) => onDragStartChar(e, c)}
-              onDragEnd={onDragEndChar}
-              style={{ borderColor: `${costColor(c.cost)}33` }}
-            >
-              <CharAvatar char={c} size={40} />
-              <div className={styles.charChipName}>{c._id.replace(/_/g, " ")}</div>
-              <div className={styles.charChipBond}>
-                {normalizeBondArray(c.bond[lang]).map((bond) => (
-                  <span key={bond}>{bond}</span>
-                ))}
-              </div>
-            </div>
-          ))}
+          {loading ? <span>{t("loading", lang)}</span> : (
+            <>
+              {[1, 2, 3, 4, 5].map(cost => (
+                groupedChars[cost].length > 0 && (
+                  <div key={cost} className={styles.rarityGroup}>
+                    <div className={styles.rarityLabel} style={{ color: costColor(cost) }}>
+                      {cost} cost
+                    </div>
+                    <div className={styles.charGroup}>
+                      {groupedChars[cost].map((c) => (
+                        <div
+                          key={c._id}
+                          className={styles.charChip}
+                          draggable
+                          onDragStart={(e) => onDragStartChar(e, c)}
+                          onDragEnd={onDragEndChar}
+                          style={{ borderColor: `${costColor(c.cost)}33` }}
+                        >
+                          <CharAvatar char={c} size={60} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>

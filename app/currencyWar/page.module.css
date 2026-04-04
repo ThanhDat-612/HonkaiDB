@@ -5,7 +5,7 @@
 .parent {
   display: grid;
   grid-template-columns: 220px 1fr 260px;
-  grid-template-rows: 56px 1fr 150px;
+  grid-template-rows: 56px 1fr 250px;
   height: 100vh;
   overflow: hidden;
   background: #0a0f1e;
@@ -203,7 +203,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 0;
   padding: 20px 24px;
   background:
     linear-gradient(rgba(96, 165, 250, 0.025) 1px, transparent 1px),
@@ -248,7 +248,7 @@
 
 .teamRow {
   display: grid;
-  gap: 10px;
+  gap: 30px;
   width: 100%;
   justify-content: center;
 }
@@ -266,6 +266,16 @@
   position: relative;
   cursor: pointer;
   overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.teamSlot[draggable="true"] {
+  cursor: grab;
+}
+
+.teamSlot[draggable="true"]:active {
+  cursor: grabbing;
 }
 
 .teamSlot:hover {
@@ -286,15 +296,13 @@
   background: transparent;
 }
 
-.slotContent img,
-.slotContent div {
+.slotContent img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
   position: relative;
   z-index: 1;
-  background: transparent;
 }
 
 .slotName {
@@ -328,20 +336,16 @@
   line-height: 1.1;
 }
 
-.costBadge {
+.costBadge { display: none; }
+
+.slotContent::after {
+  content: "";
   position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 800;
-  color: #000;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 40%, transparent 70%);
   z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 /* ── CHARACTER POOL ──────────────────────────────────────────────── */
@@ -351,10 +355,10 @@
   background: rgba(5, 10, 25, 0.92);
   border-top: 1px solid rgba(96, 165, 250, 0.12);
   display: flex;
-  align-items: center;
-  padding: 0 16px;
+  align-items: flex-start;
+  padding: 16px;
   gap: 12px;
-  overflow-x: auto;
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(96, 165, 250, 0.2) transparent;
 }
@@ -373,9 +377,30 @@
 
 .charPoolList {
   display: flex;
-  gap: 8px;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
   padding: 8px 0;
+  width: 100%;
+}
+
+.rarityGroup {
+  width: 100%;
+}
+
+.rarityLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.charGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
 }
 
 .charChip {
@@ -384,12 +409,13 @@
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  padding: 8px 6px;
+  padding: 2px 3px;
   background: rgba(15, 23, 42, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 6px;
   cursor: grab;
-  width: 72px;
+  width: 56px;
+  height: 64px;
   transition: all 0.2s;
   user-select: none;
 }
@@ -402,28 +428,6 @@
 }
 
 .charChip:active { cursor: grabbing; transform: scale(0.96); }
-
-.charChipName {
-  font-size: 9px;
-  font-weight: 600;
-  color: #cbd5e1;
-  text-align: center;
-  text-transform: capitalize;
-  letter-spacing: 0.3px;
-  line-height: 1.2;
-}
-
-.charChipBond {
-  font-size: 8px;
-  color: #475569;
-  text-align: center;
-  line-height: 1.2;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 
 .costDots {
   display: flex;
@@ -488,9 +492,9 @@
 }
 
 /* ── SCROLLBAR ───────────────────────────────────────────────────── */
-.charPool::-webkit-scrollbar { height: 3px; }
+.charPool::-webkit-scrollbar { width: 6px; }
 .charPool::-webkit-scrollbar-track { background: transparent; }
-.charPool::-webkit-scrollbar-thumb { background: rgba(96, 165, 250, 0.2); border-radius: 2px; }
+.charPool::-webkit-scrollbar-thumb { background: rgba(96, 165, 250, 0.2); border-radius: 3px; }
 /* ... Giữ các phần cũ bạn đã viết, thêm/sửa các đoạn sau ... */
 
 .searchBox {
@@ -587,12 +591,7 @@
   border-radius: 6px;
   text-align: center;
 }
-.slotContent::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
-}
+
 .synergyIconWrap {
   position: relative;
   width: 40px;
