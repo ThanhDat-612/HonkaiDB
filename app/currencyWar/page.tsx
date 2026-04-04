@@ -38,7 +38,7 @@ const BOND_THRESHOLDS: Record<string, number[]> = {
   "Debuff":[2,4,6,8],
   "Galaxy Ranger":[1,2,3],
   "AoE":[3,5,7,9],
-  "Blooflame":[2,4,6,8],
+  "Bloodflame":[2,4,6,8],
   "Express Cohort":[2,4,6],
   "Expert Advisor":[1,2,3],
   "Xianzhou":[3,5,7,10],
@@ -102,11 +102,35 @@ const getBondThresholds = (name: string, bondNameMap?: Map<string, string>) => {
 const SPECIAL_SYNERGIES = new Set<string>([]);
 
 const getSynergyBgTier = (count: number, thresholds: number[]) => {
-  if (count < thresholds[0]) return "";
   const sorted = [...thresholds].sort((a, b) => a - b);
-  if (sorted.length >= 3 && count >= sorted[2]) return "gold.webp";
-  if (sorted.length >= 2 && count >= sorted[1]) return "silver.webp";
-  return "bronze.webp";
+  const n = sorted.length;
+
+  // Chưa kích hoạt mốc đầu tiên → không hiện bg
+  if (count < sorted[0]) return "";
+
+  // Tìm mốc cao nhất đã đạt được
+  const reachedIdx = [...sorted].reduce((best, t, idx) => count >= t ? idx : best, -1);
+  if (reachedIdx === -1) return "";
+
+  // Mốc đầu tiên (idx 0) → bronze
+  if (reachedIdx === 0) return "bronze.webp";
+
+  // Mốc cuối cùng:
+  // - Nếu có >= 4 mốc → diamond
+  // - Nếu chỉ có <= 3 mốc → gold (tối đa gold)
+  if (reachedIdx === n - 1) {
+    return n >= 4 ? "diamond.webp" : "gold.webp";
+  }
+
+  // Mốc kế cuối (idx = n-2):
+  // - Nếu có >= 4 mốc → gold
+  // - Nếu chỉ có 3 mốc, kế cuối là idx 1 → silver
+  if (reachedIdx === n - 2) {
+    return n >= 4 ? "gold.webp" : "silver.webp";
+  }
+
+  // Các mốc ở giữa → silver
+  return "silver.webp";
 };
 
 const getSynergyBgImage = (name: string, count: number, thresholds: number[], specialSynergies: Set<string>) => {
@@ -387,7 +411,7 @@ export default function Page() {
     // Nếu kéo cùng nhân vật vào slot đang có nhân vật đó → tăng sao
     if (existing && existing._id === dragRef.current.data._id) {
       const currentStar = starLevels[toIndex] ?? 1;
-      if (currentStar < 6) {
+      if (currentStar < 4) {
         setStarLevels(prev => ({ ...prev, [toIndex]: currentStar + 1 }));
       }
       // Nếu kéo từ slot khác → xóa slot nguồn
